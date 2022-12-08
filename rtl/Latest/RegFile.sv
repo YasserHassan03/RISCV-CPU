@@ -1,8 +1,9 @@
-module RegFile #(
+module RegisterFile #(
     parameter A_WIDTH = 5,
     D_WIDTH = 32
 ) (
     input logic CLK,
+    input logic trigger,
     input logic WE3,
     input logic [A_WIDTH-1:0] A1,
     input logic [A_WIDTH-1:0] A2,
@@ -27,6 +28,9 @@ module RegFile #(
   end
 
   // Write to register file
-  always_ff @(posedge CLK) if (WE3) REG_FILE[A3] <= WD3;
+  always_ff @(posedge CLK) begin
+    if (WE3) REG_FILE[A3] <= WD3;
+    if (trigger) REG_FILE[5] <= 32'b1;
+  end
 
 endmodule
