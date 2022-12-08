@@ -3,13 +3,13 @@
 #include "Vcpu.h"
 #include <iostream>
 #include <iomanip>
-
-#include "vbuddy.cpp"     // include vbuddy code
+#include "vbuddy.cpp"    
 #define MAX_SIM_CYC 100000
 
 int main(int argc, char **argv, char **env) {
-  int simcyc;     // simulation clock count
-  int tick;       // each CLK cycle has two ticks for two edges
+  int simcyc;     // Simulation Cycle 
+  int trigcyc;    // Cycle trigger is set
+  int tick;       // Clock ticks
 
   Verilated::commandArgs(argc, argv);
   
@@ -24,34 +24,34 @@ int main(int argc, char **argv, char **env) {
 
   // init Vbuddy
   if (vbdOpen()!=1) return(-1);
-  vbdHeader("Ahmad Test"); // My branch :)
-  vbdSetMode(0);
+  vbdHeader("CPU Test");
+  vbdSetMode(1);
 
   // initialize simulation inputs
   cpu->CLK = 0;
   cpu->rst = 0;
+  cpu->trigger = 0;
 
   for (simcyc = 0; simcyc < MAX_SIM_CYC; simcyc++) {
 
-    for (tick=0; tick<2 && vbdFlag(); tick++) {
+    // Clock ticks
+    for (tick=0; tick<2; tick++) {
       tfp->dump (2*simcyc+tick);
       cpu->CLK = !cpu->CLK;
       cpu->eval ();
     }
 
-    // vbdHex(1, int(cpu->a0) & 0xf);
-    // vbdHex(2, int(cpu->a0) >> 4 & 0xf);
-    // vbdHex(3, int(cpu->a0) >> 8 & 0xf);
-    vbdPlot(cpu->a0,0,255);
-
+    // Output to Vbuddy
+    vbdBar(cpu->a0);
     vbdCycle(simcyc);
 
-    // Displays value at a0 on Vbuddy
-
+    // Set trigger
+    cpu->trigger = (vbdFlag() || vbdGetkey() == 't');
     
-
+    // Exit 1
     if (Verilated::gotFinish())  exit(0);
   }
+  // Exit 2
   vbdClose();
   tfp->close(); 
   exit(0);
