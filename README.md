@@ -1,4 +1,6 @@
 # iac-riscv-cw-32
+## Single-Cycle CPU
+
 ## f1 machine code
 
 One of the ways we tested the cpu works, was through writing an assembly language code to implement the F1 starting light algorithm from lab 3. The diagram for the state machine we were supposed to be implementing can be seen below (image taken from lab 3):
