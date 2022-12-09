@@ -1,29 +1,51 @@
-// saved registers S2-11 for constants
+/* 
+ra - return address
+t0 - trigger
+t1 - temp for a0
+s1 - const 1
+s2 - const 255
+s3 - const 5 (adjust for count)
+a1 - counter var
+a2 - xor bit var
+a3 - pseudo random var
+a4 - delay counter var
+*/
 
-default:
-    addi a0,zero,0x0 // binary output
-    addi a1,zero,0x0 // states
-    addi s1,zero,0x1
-    addi s2,zero,0x8
-    addi s3,zero,final address
-resetaddress:
-    addi a2,zero,starting address
+defaut:
+    addi s1, zero, 0x1  
+    addi s2, zero, 0xff 
+    addi s3, zero, 0x5 /* MAY MAKE BIGGER */
+    addi a3, zero, 0x1 
+
+reset:
+    addi a0, zero, 0x0 /* reset output */
+    addi a4, zero, 0x0 /* reset delay counter */
+    addi t0, zero, 0x0 /* reset trigger */
 
 mloop:
-    beq t0, s1, fsm
-    addi a2,zero,1
-    beq  a2, s3, resetaddress
-    jal   mloop
-    
-fsm:
-    slli a0, a0, 1
-    addi a0,a0,1
-    addi a1,a1,1
-    beq a1,s2,timer
-timer:
-    lw a3, (a2)
-delay: addi a0,zero,0x0
-    sub a3, a3,s1
-    bne a3,zero,delay
-    jal default
+    beq  t0, s1, fsm    /* check trigger */ 
+    srli a2, a3, 0x3    /* send 4th bit to 1st bit */
+    xor  a2, a2, a3     /* xor 4th bit and 1st bit */
+    andi a2, a2, 0x1    /* remove other bits */
+    slli a3, a3, 0x1    /* shift number left by 1 */
+    add  a3, a3, a2     /* add xor and shifted bits */
+    andi a3, a3, 0xf    /* remove additional bits */
+    jal  ra, mloop      /* Loop  */
 
+fsm:
+    jal  ra, count      /* add const delay */
+    slli t1, a0, 0x1    /* shift temp output bits left by 1 */
+    addi a0, t1, 0x1    /* add 1 to shifted bits for output */
+    bne  a0, s2, fsm    /* if not all lights are on Loop */
+
+delay:
+    beq  a4, a3, reset  /* if delay counter is finished reset */
+    jal  ra, count      /* jump to counter MAY NOT NEED THIS */
+    addi a4, a4, 0x1    /* increment delay counter */
+    jal  ra, delay      /* Loop */
+
+count: 
+    addi  a1, a1, 0x1   /* counter++ */
+    bne   a1, s3, count /* Loop if counting */
+    addi  a1, zero, 0x0 /* reset counter */
+    jalr  ra, ra, 0x0   /* return to fsm */
