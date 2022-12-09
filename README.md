@@ -1,5 +1,13 @@
 # iac-riscv-cw-32
 ## Single-Cycle CPU
+To explain how we implemented the full single cycle CPU, we will talk about it in parts. The picture below shows the schematic of the cpu with a few extra multiplexors which we will explain later.
+
+<img width="514" alt="Screenshot 2022-12-08 at 13 41 18" src="https://user-images.githubusercontent.com/116260803/206461093-a04f7036-d5ce-47a8-9e6b-5642c93bab6f.png">
+
+### PC Module
+
+
+
 
 ## f1 machine code
 
