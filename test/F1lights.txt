@@ -1,0 +1,29 @@
+// saved registers S2-11 for constants
+
+default:
+    addi a0,zero,0x0 // binary output
+    addi a1,zero,0x0 // states
+    addi s1,zero,0x1
+    addi s2,zero,0x8
+    addi s3,zero,final address
+resetaddress:
+    addi a2,zero,starting address
+
+mloop:
+    beq t0, s1, fsm
+    addi a2,zero,1
+    beq  a2, s3, resetaddress
+    jal   mloop
+    
+fsm:
+    slli a0, a0, 1
+    addi a0,a0,1
+    addi a1,a1,1
+    beq a1,s2,timer
+timer:
+    lw a3, (a2)
+delay: addi a0,zero,0x0
+    sub a3, a3,s1
+    bne a3,zero,delay
+    jal default
+
