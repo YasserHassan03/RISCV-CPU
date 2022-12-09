@@ -6,6 +6,14 @@ To explain how we implemented the full single cycle CPU, we will talk about it i
 
 ### PC Module
 
+The PC module is clocked, meaning that PC next becomes PC on the rising edge of the next clock cycle.
+The instruction memory is byte addressed so every cycle, pc increments by 4 as one word, is 4 bytes. PC decides which memory instruction is being read from the ROM which has $2^{28}$ memory locations. We implemented a wire called PC target which is used when doing branches or jumps, to tell PC where to jump/branch to. 
+The Pc decides whether to jump to a location or increment by four as usual through a mux which has inputs PC target and PC + 4 and a select jump reg, which goes high (thus selecting PC target) when doing a jump/branch. 
+
+Once we read from the ROM, the output of PC module is a concatenation of PC instructions to form a word therefore making a full instruction. The instruction is then sent to the control, sign extend and ALU units. 
+
+### Control Unit
+
 
 
 
