@@ -61,11 +61,14 @@ Branch:
 
 We have 6 branch instructions. For beq and bne, we check the zero flag coming from the the ALU (determined using subtraction), it should be zero. All the other branches, have MSB 1 in funct3, so we use a mux to determine whether we do a sub in ALU or if we do less than signed/unsigned. This is decided off the middle bit of funct3.
 
-
-
-
-
 ### Sign Extend Unit
+
+Each Imm set-up is different different for each type of instruction (I,U,S,B,J) as seen below (from lecture 6):
+
+<img width="1339" alt="Screenshot 2022-12-12 at 14 07 51" src="https://user-images.githubusercontent.com/116260803/207066709-afed76d9-bc9a-47de-9cc5-10c0e58c0d20.png">
+
+Note: for jumps and branch, our immediate starts from 1 not 0 because you are jumping/branching to a word address so you concatenate it with a 0 bit at the LSB.
+We have a case for each type where the output corresponds to each type of concatenation shown above in the image.
 
 ### ALU 
 
