@@ -25,10 +25,10 @@ As seen in the picture above (taken from lecture 7), the control unit takes in 4
 
 <img width="662" alt="Screenshot 2022-12-12 at 12 35 52" src="https://user-images.githubusercontent.com/116260803/207046709-8aafcf19-7cbc-48a6-9f66-cbe0b43898f8.png">
 
-The image (Also taken from lecture 7) above now shows a lower level, more in-depth view of the control unit. We can clearly see that it is now split into the Main decoder, which decodes opblock instuctions, and ALU decoder which decodes funct3 and funct7 bit 5. We can also see that the zero flag and branch signal. 
-We want PCSRC to be equal to 1 when the LSB of funct3 is 0 and the Zero flag is 1 or the when LSB of funct3 is 1 and the Zero flag is 0. This is the equivelant of XOR'ing the LSB of funct3 and the Zero flag. We then and this with the branch signal to ensure thatit is also a flag before PCSRC goes high.
+The image (Also taken from lecture 7) above now shows a lower level, more in-depth view of the control unit. We can clearly see that it is now split into the Main decoder, which decodes opblock instuctions, and ALU decoder which decodes funct3 and funct7 bit 5. We can also see that the zero flag is *AND'ed* with the branch signal to result in PCSRC. 
+We want PCSRC to be equal to 1 when the LSB of funct3 is 0 and the Zero flag is 1 or the when LSB of funct3 is 1 and the Zero flag is 0. This is the equivelant of *XOR'ing* the LSB of funct3 and the Zero flag. We then *AND* this with the branch signal to ensure that it is also a flag before PCSRC goes high.
 
-Now, Let's look at the Main decoder, implemented as maindecoder.sv on this git. We defined all our defaults at the beginning and based on which instruction we are executing, we alter the appropriate control signal from default. An example of this is seen below using the branch instruction:
+Now, let's look at the Main decoder, implemented as maindecoder.sv on this git. We defined all our defaults at the beginning and based on which instruction we are executing, we alter the appropriate control signal from default. An example of this is seen below using the branch instruction:
 
 ```verilog
    // Branch - B   
@@ -63,7 +63,7 @@ We have 6 branch instructions. For beq and bne, we check the zero flag coming fr
 
 ### Sign Extend Unit
 
-Each Imm set-up is different different for each type of instruction (I,U,S,B,J) as seen below (from lecture 6):
+Each Imm set-up is different for each type of instruction (I,U,S,B,J) as seen below (from lecture 6):
 
 <img width="1339" alt="Screenshot 2022-12-12 at 14 07 51" src="https://user-images.githubusercontent.com/116260803/207066709-afed76d9-bc9a-47de-9cc5-10c0e58c0d20.png">
 
@@ -88,7 +88,7 @@ The lfsr used in the random delay implementation is constantly running in the ba
 
 ### Constant delay between red lights
 
-While testing, we thought that the lights were cycling through too quickly, not giving us a chance to properly see if our implementation was correct so we implemented a constant delay to allow us to see the light cycling better. To do this, we set a register s3 equal to a constant we decided on through trial and error. We then counted up from 0 in a register a1. We continued to count untill the value in a1 was equal to the value in s3 before then resetting a1 and jumping back to the fsm subroutine.
+While testing, we thought that the lights were cycling through too quickly, not giving us a chance to properly see if our implementation was correct so we implemented a constant delay to allow us to see the light cycling better. To do this, we set a register s3 equal to a constant we decided on through trial and error. We then counted up from 0 in a register a1. We continued to count until the value in a1 was equal to the value in s3 before then resetting a1 and jumping back to the fsm subroutine.
 
 ``` assembly
 count:
