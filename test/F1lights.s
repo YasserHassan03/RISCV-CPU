@@ -11,16 +11,16 @@ a3 - pseudo random var
 a4 - delay counter var
 */
 
-defaut:
+default:
     addi s1, zero, 0x1  
     addi s2, zero, 0xff 
-    addi s3, zero, 0x5 /* MAY MAKE BIGGER */
+    addi s3, zero, 0x5  /* MAY MAKE BIGGER */
     addi a3, zero, 0x1 
 
 reset:
-    addi a0, zero, 0x0 /* reset output */
-    addi a4, zero, 0x0 /* reset delay counter */
-    addi t0, zero, 0x0 /* reset trigger */
+    addi a0, zero, 0x0  /* reset output */
+    addi a4, zero, 0x0  /* reset delay counter */
+    addi t0, zero, 0x0  /* reset trigger */
 
 mloop:
     beq  t0, s1, fsm    /* check trigger */ 
