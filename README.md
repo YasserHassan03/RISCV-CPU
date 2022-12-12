@@ -43,19 +43,19 @@ Now, Let's look at the Main decoder, implemented as maindecoder.sv on this git. 
 The 7'd99 at the start here corresponds to a branch instruction and is taken from the risc-v instruction set.
 Immsrc is set to '011' beacuse in our sign extend unit, we have chosen to set 011 corresponding to read Imm as branch instructions. 
 The ALUop 2'b01 is because in ALU decoder we have chosen this to correspond to branches.
-The ALU src is set to 0 so that in our ALU we read straight from a register. The ALUsrc acts as a select to a mux just before the ALU thus deciding what goes into the ALU.
+The ALUsrc is set to 0 so that in our ALU we can compare two register values. The ALUsrc acts as a select to a mux just before the ALU thus deciding what goes into the ALU.
 Finally, since it is a branch instruction we set branch signal equal to 1 so that we can change PCSRC as talked about above.
 
 Moving on to look at the ALU decoder (ALUdecoder.sv), There we implement 3 types of instructions: Register & Immediate, load/store & Branch.
 
 Register & immediate: 
 
-As long as it's not not a load or a store function, the output is the same instruction for both register and immediate types, it is based on funct3, funct7 bit 5 and opcode bit 5.
+As long as it's not a load or a store function, the ALUcontrol is the same instruction for both register and immediate types, and is based on funct3, funct7 bit 5 and opcode bit 5.
 
 Load/Store: 
 
 If the instruction is a load or a store, we make it an add instruction because in the risc-v instruction set, we add a register and an immediate to get the memory address of what we are storing. 
-Here we also also added an extra output called Type which tells us if we are loading or stroing byte, half-word, byte unsigned, half unsigned. We set this to be funct3 as they're the same for laod and store.
+Here we also also added an extra output called Type which tells us if we are loading or storing byte, half-word, word, byte unsigned, half unsigned. We set this to be funct3 as they're the same for laod and store.
 
 Branch: 
 
@@ -68,7 +68,8 @@ Each Imm set-up is different different for each type of instruction (I,U,S,B,J) 
 <img width="1339" alt="Screenshot 2022-12-12 at 14 07 51" src="https://user-images.githubusercontent.com/116260803/207066709-afed76d9-bc9a-47de-9cc5-10c0e58c0d20.png">
 
 Note: for jumps and branch, our immediate starts from 1 not 0 because you are jumping/branching to a word address so you concatenate it with a 0 bit at the LSB.
-We have a case for each type where the output corresponds to each type of concatenation shown above in the image.
+
+We have a case for each type where the output corresponds to each type of concatenation shown above in the image based on Immsrc.
 
 ### ALU 
 
