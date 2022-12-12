@@ -1,7 +1,7 @@
 # iac-riscv-cw-32
 ## Introduction
 
-In the rtl folder you can find all the files we have worked and uploaded during the course of the project. These include the base folder, which has the lab 4 CPU built before we received the project brief. Also included in the rtl folder, is our adapted base cpu for our lab 5 as well as the pipelined version and a read me describing what each person is working on. The test folder contains all our test files and a readme explaining the results we saw.
+In the rtl folder you can find all the files we have worked and uploaded during the course of the project. These include the base folder, which has the lab 4 CPU built before we received the project brief. Also included in the rtl folder, is our adapted base cpu, called single-cycle, for our lab 5 as well as the pipelined version and a read me describing what each person has worked on. The test folder contains all our test files and a readme explaining the results we saw.
 This readme file describes how we implemented our cpu and how it works.
 
 ## Single-Cycle CPU
@@ -19,13 +19,59 @@ Once we read from the ROM, the output of PC module is a concatenation of PC inst
 
 ### Control Unit
 
+<img width="651" alt="Screenshot 2022-12-12 at 12 25 53" src="https://user-images.githubusercontent.com/116260803/207044724-101dbd4e-a93d-43af-846f-a789ab644c73.png">
+
+As seen in the picture above (taken from lecture 7), the control unit takes in 4 inputs, the zero flag (used for branches) , opcode (determines which type of instruction we are doing), funct3 (tells us which ALU instruction we are doing), and funct7 bit 5 (this distinguishes between arithmetic/logical shifts and add/sub.
+
+<img width="662" alt="Screenshot 2022-12-12 at 12 35 52" src="https://user-images.githubusercontent.com/116260803/207046709-8aafcf19-7cbc-48a6-9f66-cbe0b43898f8.png">
+
+The image (Also taken from lecture 7) above now shows a lower level, more in-depth view of the control unit. We can clearly see that it is now split into the Main decoder, which decodes opblock instuctions, and ALU decoder which decodes funct3 and funct7 bit 5. We can also see that the zero flag and branch signal. 
+We want PCSRC to be equal to 1 when the LSB of funct3 is 0 and the zero flag to be one or the LSB of funct3 to be 1 and the zero flag to be 0. This is the equivelant of XOR'ing the LSB of funct3 and the zero flag. We then and this with the branch signal to ensure thatit is also a flag before PCSRC goes high.
+
+Now, Let's look at the Main decoder, implemented as maindecoder.sv on this git. We defined all our defaults at the beginning and based on which instruction we are executing, we alter the appropriate control signal from default. An example of this is seen below using the branch instruction:
+
+```verilog
+       // Branch - B   
+      // Branch Instructions    
+      7'd99: begin
+        ImmSrc = 3'b011;
+        ALUOp  = 2'b01;
+        ALUSrc = 1'b0;
+        Branch = 1'b1;
+      end
+```
+The 7'd99 at the start here corresponds to a branch instruction and is taken from the risc-v instruction set.
+Immsrc is set to '011' beacuse in our sign extend unit, we have chosen to set 011 corresponding to read Imm as branch instructions. 
+The ALUop 2'b01 is because in ALU decoder we have chosen this to correspond to branches.
+The ALU src is set to 0 so that in our ALU we read straight from a register. The ALUsrc acts as a select to a mux just before the ALU thus deciding what goes into the ALU.
+Finally, since it is a branch instruction we set branch signal equal to 1 so that we can change PCSRC as talked about above.
+
+Moving on to look at the ALU decoder (ALUdecoder.sv), There we implement 3 types of instructions: Register & Immediate, load/store & Branch.
+
+Register & immediate: 
+
+As long as it's not not a load or a store function, the output is the same instruction for both register and immediate types, it is based on funct3, funct7 bit 5 and opcode bit 5.
+
+Load/Store: 
+
+If the instruction is a load or a store, we make it an add instruction because in the risc-v instruction set, we add a register and an immediate to get the memory address of what we are storing. 
+Here we also also added an extra output called Type which tells us if we are loading or stroing byte, half-word, byte unsigned, half unsigned. We set this to be funct3 as they're the same for laod and store.
+
+Branch: 
+
+We have 6 branch instructions. For beq and bne, we check the zero flag coming from the the ALU (determined using subtraction), it should be zero. All the other branches, have MSB 1 in funct3, so we use a mux to determine whether we do a sub in ALU or if we do less than signed/unsigned. This is decided off the middle bit of funct3.
+
+
+
+
+
 ### Sign Extend Unit
 
 ### ALU 
 
 
 
-## f1 machine code
+## F1 machine code
 
 One of the ways we tested the cpu works, was through writing an assembly language code to implement the F1 starting light algorithm from lab 3. The diagram for the state machine we were supposed to be implementing can be seen below (image taken from lab 3):
 
