@@ -19,6 +19,9 @@ Once we read from the ROM, the output of PC module is a concatenation of PC inst
 
 ### Control Unit
 
+### Sign Extend Unit
+
+### ALU 
 
 
 
