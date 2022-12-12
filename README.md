@@ -12,8 +12,8 @@ To explain how we implemented the full single cycle CPU, we will talk about it i
 ### PC Module
 
 The PC module is clocked, meaning that PC next becomes PC on the rising edge of the next clock cycle.
-The instruction memory is byte addressed so every cycle, pc increments by 4 as one word, is 4 bytes. PC decides which memory instruction is being read from the ROM which has $2^{28}$ memory locations. We implemented a wire called PC target which is used when doing branches or jumps, to tell PC where to jump/branch to. 
-The Pc decides whether to jump to a location or increment by four as usual through a mux which has inputs PC target and PC + 4 and a select jump reg, which goes high (thus selecting PC target) when doing a jump/branch. 
+The instruction memory is little endian byte addressed so every cycle, PC increments by 4 as one word (4 bytes). PC decides which memory instruction is being read from the ROM which we set to have $2^{28}$ memory locations as the compiler throws an error for anything higher. We implemented a wire called PCtarget which is used when doing branches or jal, to tell PC where to jump/branch to . 
+The PC decides whether to jump to a location or increment by four as usual through a mux which has inputs PCtarget and PC + 4 and a select PCsrc, which goes high (thus selecting PC target) when doing a jump/branch. 
 
 Once we read from the ROM, the output of PC module is a concatenation of PC instructions to form a word therefore making a full instruction. The instruction is then sent to the control, sign extend and ALU units. 
 
@@ -26,12 +26,12 @@ As seen in the picture above (taken from lecture 7), the control unit takes in 4
 <img width="662" alt="Screenshot 2022-12-12 at 12 35 52" src="https://user-images.githubusercontent.com/116260803/207046709-8aafcf19-7cbc-48a6-9f66-cbe0b43898f8.png">
 
 The image (Also taken from lecture 7) above now shows a lower level, more in-depth view of the control unit. We can clearly see that it is now split into the Main decoder, which decodes opblock instuctions, and ALU decoder which decodes funct3 and funct7 bit 5. We can also see that the zero flag and branch signal. 
-We want PCSRC to be equal to 1 when the LSB of funct3 is 0 and the zero flag to be one or the LSB of funct3 to be 1 and the zero flag to be 0. This is the equivelant of XOR'ing the LSB of funct3 and the zero flag. We then and this with the branch signal to ensure thatit is also a flag before PCSRC goes high.
+We want PCSRC to be equal to 1 when the LSB of funct3 is 0 and the Zero flag is 1 or the when LSB of funct3 is 1 and the Zero flag is 0. This is the equivelant of XOR'ing the LSB of funct3 and the Zero flag. We then and this with the branch signal to ensure thatit is also a flag before PCSRC goes high.
 
 Now, Let's look at the Main decoder, implemented as maindecoder.sv on this git. We defined all our defaults at the beginning and based on which instruction we are executing, we alter the appropriate control signal from default. An example of this is seen below using the branch instruction:
 
 ```verilog
-       // Branch - B   
+   // Branch - B   
       // Branch Instructions    
       7'd99: begin
         ImmSrc = 3'b011;
