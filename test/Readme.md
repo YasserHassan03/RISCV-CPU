@@ -11,3 +11,12 @@ https://user-images.githubusercontent.com/116260803/207304050-5d9542f9-8b06-49fd
 (NOTE: we used the website veed.io to compress our video so that we could upload it to github)
 
 As expected, the F1 lights program works and we can clearly see the random delay implemented as there are two different delays in the two cycles we ran.
+
+
+## Reference Program testing
+
+To test the reference program, we had to specify, in accordance to the data map provided in the reference program repo, where we start writing to, we did this in the following way:
+``` verilog
+  $readmemh("DataMemory.mem", RAM, 32'h10000);
+```
+This specifies that the first address we are writing to is 0x00010000
