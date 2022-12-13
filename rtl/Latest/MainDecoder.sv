@@ -66,8 +66,8 @@ module MainDecoder (
     // Store - S
       // Store Instructons
       7'd35: begin
+        ALUOp = 2'b00;
         ImmSrc   = 3'b010;
-        ALUSrc   = 1'b0;
         MemWrite = 1'b1;
       end
     // Branch - B   

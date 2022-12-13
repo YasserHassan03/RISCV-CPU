@@ -9,13 +9,13 @@ module PCReg #(
 
   // Clocked Register with Reset
   always_ff @(posedge CLK)
-    if (rst) PC <= 32'b0;
+    if (rst) PC <= 32'hbfc00000;
     else PC <= PCNext;
 
   // Displays PC on terminal
-  always_comb begin
-    $display("\n\n\n");
-    $display("Program Counter: ", PC);
-  end
+  // always_comb begin
+  //   $display("\n\n\n");
+  //   $display("Program Counter: ", PC);
+  // end
 
 endmodule

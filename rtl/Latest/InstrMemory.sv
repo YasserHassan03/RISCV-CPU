@@ -12,7 +12,7 @@ module InstrMemory #(
   // Load ROM from mem file
   initial begin
     $display("Loading ROM");
-    $readmemh("InstrMemory.mem", ROM);
+    $readmemh("pdf.hex", ROM);
     $display("Instructions written to ROM successfully");
   end
 

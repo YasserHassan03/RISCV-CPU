@@ -16,8 +16,13 @@ module DataMemory #(
   // Load RAM from mem file
   initial begin
     $display("Loading RAM");
+<<<<<<< HEAD
     $readmemh("gaussian.mem", RAM, 32'h10000);
     $display("Instructions written to RAM successfully");
+=======
+    $readmemh("gauss.mem", RAM, 32'h10000);
+    $display("Data written to RAM successfully");
+>>>>>>> afb2a05 (Patched incorrect control signals)
     // for (int i=0; i<$size(DataMemory);i++)
     //     $display(DataMemory[i]," ");
     //     DataMemory[i]=32'b0;
@@ -26,7 +31,7 @@ module DataMemory #(
   // Assign Output
   assign RD = {RAM[A+3], RAM[A+2], RAM[A+1], RAM[A]};
 
-  // Write to RAM
+  // Write to RAM lil endian
   always_ff @(posedge CLK) begin
     if (WE == 1'b1) begin
       RAM[A+3] <= WD[31:24];

@@ -105,11 +105,9 @@ module cpu #(
       .Result(Result)
   );
 
-  // Dsiplay
-  always_comb begin
-    // $display("Instruction: %h", Instr);
-    // $display("ALUControl: %b", ALUControl);
-    // $display("ALUResult: %h", ALUResult);
-    // $display("a0: %b", a0);
-  end
+//   always_ff @(posedge CLK) begin
+//     $display(); 
+//   end
+
+  
 endmodule

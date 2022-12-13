@@ -50,7 +50,7 @@ module ALUtop #(
   );
 
   // SrcA MUX
-  assign SrcA = PCUppSrc ? PC + 4 : RD1;
+  assign SrcA = PCUppSrc ? PC : RD1;
 
   // SrcB MUX 
   assign SrcB = ALUSrc ? ImmExt : RD2;
