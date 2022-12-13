@@ -104,8 +104,10 @@ always_comb begin
 
 The inputs SRCA and SRCB come from the register file and are the 32 bit values that are operated on by the ALU depending on the operation selected.
 The register file is a clocked multi-port array which is used to load/store values. We used parameters for the address and data widths in order to be able to change them easily if we wanted to. By default the size of the register file is 32 by 32 bits. The outputs RD1 and RD2 are set to be the value held at address A1 and A2 respectively. These adress values are obtained from the instruction bits 19:15 and 24:20. Input A3 is used to specify the address where to write the input value WD3 (Result) if the input to the write enable (WE3) is high. The input trigger causes the value at register t0 (address 5) to be set to 1. The output a0 is the value held at register 10.
+
 Finally the top level ALU module includes additional multiplexers which can enable additional instructions. The mux for ImmRes chooses the sign extended value when ImmUppSrc is high (this would be the case for LUI instructions) and bypasses the ALU. Otherwise the result is read from the ALU as normal. THe WD3 mux takes in PC+4 and ImmRes with jump as the select. If jump is high then the Write Data is PC+4 as this needs to be stored in the register for JAL or JLR instructions (as a sort of return address) otherwise the write data remains as normal. The SrcA mux enables the upper immediate to be added to the program counter which is an AUIP instruction. This happens if the PCUppSrc select is high. The SrcB mux decides if the input to the ALU comes from the register or the immediate operand. So the select ALUSrc is used to distinguish between register or immediate operations.
 
+The main challenge in the ALU section was to find a way to be able to distinguish between the RISCV instructions and implement logic to cause the ALU to behave accordingly.
 
 
 
