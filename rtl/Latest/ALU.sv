@@ -8,28 +8,16 @@ module ALU #(
     output logic               Zero
 );
 
-  logic Unsigned;
-  logic DiffSign;
-
-  always_latch begin
-    Zero = (SrcA == SrcB);
+  always_comb begin
     case (ALUControl[2:0])
       // Add Sub
       3'b000:  ALUResult = ALUControl[3] ? SrcA - SrcB : SrcA + SrcB;
       // Shift Left    
       3'b001:  ALUResult = SrcA << SrcB[4:0];
       // Set Less Than (Signed) 
-      3'b010: begin
-        Unsigned  = SrcA < SrcB;
-        DiffSign  = SrcA[31] ^ SrcB[31] ? 1 : Unsigned;
-        Zero      = SrcB[31] ? !DiffSign : DiffSign;
-        ALUResult = {{31{1'b0}}, {Zero}};
-      end
+      3'b010:  ALUResult = {{31{1'b0}}, {signed'(SrcA) < signed'(SrcB)}};
       // Set Less Than (Unsigned)
-      3'b011: begin
-        Zero      = SrcA < SrcB;
-        ALUResult = {{31{1'b0}}, {Zero}};
-      end
+      3'b011:  ALUResult = {{31{1'b0}}, {SrcA < SrcB}};
       // XOR
       3'b100:  ALUResult = SrcA ^ SrcB;
       // Shift Right (Arithmetic/Logical) 
@@ -41,6 +29,7 @@ module ALU #(
       // Default
       default: ALUResult = 32'b0;
     endcase
-  end
+    Zero = (ALUResult == 0);
+  end
 
 endmodule
