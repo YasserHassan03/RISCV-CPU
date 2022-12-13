@@ -2,6 +2,31 @@
 
 Due to the nature of the project being interconnected and the willingness and eagerness of everyone in the group to maximise learning rather than limit ourselves to one part of the cpu, we decided to work together on the majority of the project but have certain people responsible/ in charge for certain aspescts, therefore communication was a major part of our group's dynamic.
 
+| Module          | James        | Yasser         | Kishok     |Ahmed    |
+| :---            |    :----:    |          :---: |:---:       |-----:   |
+| ALUtop.sv       |    x         |    x           | *          |  x      |
+| ControlUnit.sv  |        x     |     x          |  *         |  x      |
+|Memorytop.sv     |         x    |     x          |  *         |  x      |
+|cpu.sv           |          x   |     x          |  *         |  x      |
+|cpu_tb.cpp       |         x    |     x          |  *         |  x      |
+|LoadMemory.sv    |   *          |     x          |  x         |   x     |
+|StoreMemory.sv   |   *          |     x          |  x         |   x     |
+|PCReg.sv         |   *          |      x         |  x         |  x      |
+|PCTop.sv         |   *          |      x         |  x         |  x      |
+|InstrMemory.mem  |   *          |      x         |   x        |  x      |
+|InstrMemory.sv   |   *          |     x          |  x         |  x      |
+|ALU.sv           |         x    |  *             |   x        |  x      |
+|RegisterFile.sv  |         x    |  *             |    x       |  x      |
+|DataMemory.mem   |         x    |  *             |    x       |  x      |
+|DataMemory.sv    |         x    |  *             |    x       |  x      |
+|SignExtend.sv    |  *           |      x         |    x       |  x      |
+|ALUDecode.sv     |  *           |      x         |    x       |  x      |
+|MainDecoder.sv   |  *           |      x         |    x       |  x      |
+|F1Lights.txt     |  *           |      x         |    x       |   x     |
+|F1Lights.hex     |  *           |      x         |    x       |  x      |
+
+x =Also helped        * =Principle Contributor
+
 Who was in charge of what is listed below:
 
 ### Kishok: 
