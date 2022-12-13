@@ -7,7 +7,7 @@ module InstrMemory #(
 );
 
   // ROM Array
-  logic [D_WIDTH-1:0] ROM[2**A_WIDTH-1:0];
+  logic [D_WIDTH-1:0] ROM[32'hbfc00fff:32'hbfc00000];
 
   // Load ROM from mem file
   initial begin
