@@ -16,7 +16,7 @@ module DataMemory #(
   // Load RAM from mem file
   initial begin
     $display("Loading RAM");
-    $readmemh("DataMemory.mem", RAM);
+    $readmemh("gaussian.mem", RAM, 32'h10000);
     $display("Instructions written to RAM successfully");
     // for (int i=0; i<$size(DataMemory);i++)
     //     $display(DataMemory[i]," ");
@@ -24,15 +24,15 @@ module DataMemory #(
   end
 
   // Assign Output
-  assign RD = {RAM[A], RAM[A+1], RAM[A+2], RAM[A+3]};
+  assign RD = {RAM[A+3], RAM[A+2], RAM[A+1], RAM[A]};
 
   // Write to RAM
   always_ff @(posedge CLK) begin
     if (WE == 1'b1) begin
-      RAM[A]   <= WD[31:24];
-      RAM[A+1] <= WD[23:16];
-      RAM[A+2] <= WD[15:8];
-      RAM[A+3] <= WD[7:0];
+      RAM[A+3] <= WD[31:24];
+      RAM[A+2] <= WD[23:16];
+      RAM[A+1] <= WD[15:8];
+      RAM[A]   <= WD[7:0];
     end
   end
 endmodule
