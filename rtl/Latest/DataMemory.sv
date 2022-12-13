@@ -16,13 +16,8 @@ module DataMemory #(
   // Load RAM from mem file
   initial begin
     $display("Loading RAM");
-<<<<<<< HEAD
-    $readmemh("gaussian.mem", RAM, 32'h10000);
-    $display("Instructions written to RAM successfully");
-=======
     $readmemh("gauss.mem", RAM, 32'h10000);
     $display("Data written to RAM successfully");
->>>>>>> afb2a05 (Patched incorrect control signals)
     // for (int i=0; i<$size(DataMemory);i++)
     //     $display(DataMemory[i]," ");
     //     DataMemory[i]=32'b0;

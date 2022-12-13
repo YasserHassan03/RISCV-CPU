@@ -30,10 +30,6 @@ module ALU #(
       default: ALUResult = 32'b0;
     endcase
     Zero = (ALUResult == 0);
-<<<<<<< HEAD
   end
-=======
-end
->>>>>>> afb2a05 (Patched incorrect control signals)
 
 endmodule
