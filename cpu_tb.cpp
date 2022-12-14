@@ -40,11 +40,18 @@ int main(int argc, char **argv, char **env) {
       cpu->CLK = !cpu->CLK;
       cpu->eval ();
     }
+
+    // Test Reference
     if (simcyc>500000) {
       vbdCycle(simcyc);
       vbdPlot(cpu->a0,0,255);
     } 
 
+    // Test F1Lights
+    // cpu->trigger = vbdFlag() || vbdGetkey() == 't'; 
+    // vbdBar(cpu->a0);
+    // vbdCycle(simcyc);
+    
   }
   // Exit 2
   vbdClose();
