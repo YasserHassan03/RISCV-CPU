@@ -17,7 +17,7 @@ module StoreMemory (
         2'b11: WDOut = {{WDIn[7:0]}, {RDIn[23:0]}};
       endcase
       // Half
-      2'b01: WDOut = A[1] ? {{WDIn[31:16]}, RDIn[15:0]} : {{RDIn[31:16]}, {WDIn[15:0]}};
+      2'b01: WDOut = A[1] ? {{WDIn[15:0]}, RDIn[15:0]} : {{RDIn[31:16]}, {WDIn[15:0]}};
       // Word
       2'b10: WDOut = WDIn;
       // Default
