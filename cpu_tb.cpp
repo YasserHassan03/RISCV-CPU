@@ -48,9 +48,9 @@ int main(int argc, char **argv, char **env) {
     } 
 
     // Test F1Lights
-    // cpu->trigger = vbdFlag() || vbdGetkey() == 't'; 
-    // vbdBar(cpu->a0);
-    // vbdCycle(simcyc);
+    //cpu->trigger = vbdFlag() || vbdGetkey() == 't'; 
+    //vbdBar(cpu->a0);
+    //vbdCycle(simcyc);
     
   }
   // Exit 2

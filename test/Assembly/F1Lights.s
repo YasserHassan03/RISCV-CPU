@@ -14,7 +14,7 @@ a4 - delay counter var
 default:
     addi s1, zero, 0x1  
     addi s2, zero, 0xff 
-    addi s3, zero, 0x1  /* MAY MAKE BIGGER */
+    addi s3, zero, 0xc  /* MAY MAKE BIGGER */
     addi a3, zero, 0x1 
 
 reset:

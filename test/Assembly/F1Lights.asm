@@ -8,7 +8,7 @@ bfc00000 <default> (File Offset: 0x1000):
 default():
 bfc00000:	00100493          	addi	s1,zero,1
 bfc00004:	0ff00913          	addi	s2,zero,255
-bfc00008:	00100993          	addi	s3,zero,1
+bfc00008:	00c00993          	addi	s3,zero,12
 bfc0000c:	00100693          	addi	a3,zero,1
 
 bfc00010 <reset> (File Offset: 0x1010):
