@@ -9,7 +9,7 @@ module DataMemory #(
     output logic [WIDTH-1:0] RD
 );
   // RAM Array
-    logic [D_WIDTH-1:0] RAM[32'h1ffff:0];
+  logic [D_WIDTH-1:0] RAM[32'h1ffff:0];
 
   // Load RAM from mem file
   initial begin

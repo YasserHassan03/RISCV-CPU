@@ -16,7 +16,7 @@ module LoadMemory (
         2'b11: RDOut = {{24{RDIn[31]}}, {RDIn[31:24]}};
       endcase
       // Signed Half
-      3'b001: RDOut = A[1] ? {{16{RDIn[31]}}, {RDIn[31:16]}} : {{16{RDIn[15]}},{RDIn[15:0]}};
+      3'b001: RDOut = A[1] ? {{16{RDIn[31]}}, {RDIn[31:16]}} : {{16{RDIn[15]}}, {RDIn[15:0]}};
       // Word
       3'b010: RDOut = RDIn;
       // Unsigned Byte
