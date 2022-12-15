@@ -19,11 +19,11 @@ Due to the nature of the project being interconnected and the willingness and ea
 |RegisterFile.sv  |         x    |  *             |    x       |  x      |
 |DataMemory.mem   |         x    |  *             |    x       |  x      |
 |DataMemory.sv    |         x    |  *             |    x       |  x      |
-|SignExtend.sv    |  *           |      x         |    x       |  x      |
-|ALUDecode.sv     |  *           |      x         |    x       |  x      |
-|MainDecoder.sv   |  *           |      x         |    x       |  x      |
-|F1Lights.txt     |  *           |      x         |    x       |   x     |
-|F1Lights.hex     |  *           |      x         |    x       |  x      |
+|SignExtend.sv    |  x           |      x         |    x       |  *      |
+|ALUDecode.sv     |  x           |      x         |    x       |  *      |
+|MainDecoder.sv   |  x           |      x         |    x       |  *      |
+|F1Lights.txt     |  x           |      x         |    x       |   *     |
+|F1Lights.hex     |  x           |      x         |    x       |  *      |
 
 x =Also helped        * =Principle Contributor
 
