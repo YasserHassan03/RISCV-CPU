@@ -1,3 +1,4 @@
 *.vcd
 obj_dir
 gmon.out
+test/vcd
