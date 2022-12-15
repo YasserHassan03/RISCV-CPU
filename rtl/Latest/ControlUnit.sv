@@ -2,25 +2,21 @@ module ControlUnit (
     input  logic [6:0] op,
     input  logic [2:0] funct3,
     input  logic       funct7,
-    input  logic       Zero,
+    output logic       RegWrite,
+    output logic [1:0] ResultSrc,
+    output logic       MemWrite,
     output logic       Jump,
     output logic       JumpReg,
-    output logic       PCSrc,
-    output logic       ResultSrc,
     output logic [2:0] Type,
-    output logic       MemWrite,
+    output logic       Branch,
     output logic [3:0] ALUControl,
     output logic       ALUSrc,
     output logic [2:0] ImmSrc,
-    output logic       RegWrite,
-    output logic       PCUppSrc,
-    output logic       ImmUppSrc
+    output logic       RD1Src
 );
-
 
   // Internal Signals
   logic [1:0] ALUOp;
-  logic       Branch;
 
   // Main Decoder
   MainDecoder MD (
@@ -34,8 +30,7 @@ module ControlUnit (
       .ImmSrc(ImmSrc),
       .RegWrite(RegWrite),
       .ALUOp(ALUOp),
-      .PCUppSrc(PCUppSrc),
-      .ImmUppSrc(ImmUppSrc)
+      .RD1Src(RD1Src)
   );
 
   // ALU Decoder
@@ -47,8 +42,5 @@ module ControlUnit (
       .Type(Type),
       .ALUControl(ALUControl)
   );
-
-  // Assigns PCSrc
-  assign PCSrc = (Branch & (funct3[0] ^ Zero)) || Jump;
 
 endmodule
