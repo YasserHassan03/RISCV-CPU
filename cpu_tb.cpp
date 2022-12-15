@@ -42,8 +42,7 @@ int main(int argc, char **argv, char **env) {
     }
 
     // Test Reference
-    if (simcyc>500000) {
-      vbdCycle(simcyc);
+    if (simcyc>500000 && simcyc% 5 == 0) {
       vbdPlot(cpu->a0,0,255);
     } 
 
