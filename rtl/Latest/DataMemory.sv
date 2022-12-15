@@ -1,17 +1,15 @@
 module DataMemory #(
-    parameter A_WIDTH = 28,
-    RD_WIDTH = 32,
-    WD_WIDTH = 32,
+    parameter WIDTH = 32,
     D_WIDTH = 8
 ) (
-    input  logic                CLK,
-    input  logic [WD_WIDTH-1:0] WD,
-    input  logic [ A_WIDTH-1:0] A,
-    input  logic                WE,
-    output logic [RD_WIDTH-1:0] RD
+    input  logic             CLK,
+    input  logic [WIDTH-1:0] WD,
+    input  logic [WIDTH-1:0] A,
+    input  logic             WE,
+    output logic [WIDTH-1:0] RD
 );
   // RAM Array
-  logic [D_WIDTH-1:0] RAM[2**A_WIDTH-1:0];
+    logic [D_WIDTH-1:0] RAM[32'h1ffff:0];
 
   // Load RAM from mem file
   initial begin
