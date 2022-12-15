@@ -2,7 +2,7 @@
 
 Due to the nature of the project being interconnected and the willingness and eagerness of everyone in the group to maximise learning rather than limit ourselves to one part of the cpu, we decided to work together on the majority of the project but have certain people responsible/ in charge for certain aspescts, therefore communication was a major part of our group's dynamic.
 
-| Module          | James        | Yasser         | Kishok     |Ahmed    |
+| Module          | James        | Yasser         | Kishok     |Ahmad    |
 | :---            |    :----:    |          :---: |:---:       |-----:   |
 | ALUtop.sv       |    x         |    x           | *          |  x      |
 | ControlUnit.sv  |        x     |     x          |  *         |  x      |
