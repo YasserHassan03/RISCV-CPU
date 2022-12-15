@@ -20,6 +20,8 @@ forever:
 
 init:       # function to initialise pdf buffer memory 
     li      a1, 0xff            # loop_count a1 = 255
+    nop
+    nop
 _loop1:                         # repeat
     sb      zero, base_pdf(a1)  #     mem[base_pdf+a1) = 0
     addi    a1, a1, -1          #     decrement a1
@@ -39,8 +41,14 @@ build:      # function to build prob dist func (pdf)
     li      a4, max_count       # a4 = maximum count to terminate
 _loop2:                         # repeat
     add     a5, a1, a2          #     a5 = data base address + offset
+    nop
+    nop
     lbu     t0, 0(a5)           #     t0 = data value
+    nop
+    nop
     add     a6, t0, a3          #     a6 = index into pdf array
+    nop
+    nop
     lbu     t1, 0(a6)           #     t1 = current bin count
     nop
     nop
@@ -62,6 +70,7 @@ display:    # function send pdf array value to a0 for display
     li      a1, 0               # a1 = offset into pdf array
     li      a2, 255             # a2 = max index of pdf array
 _loop3:                         # repeat
+    nop
     lbu     a0, base_pdf(a1)    #   a0 = mem[base_pdf+a1)
     addi    a1, a1, 1           #   incr 
     nop
@@ -72,3 +81,4 @@ _loop3:                         # repeat
     ret
     nop
     nop
+

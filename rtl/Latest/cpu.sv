@@ -284,4 +284,8 @@ module cpu (
     endcase
   end
 
+  // always_ff @(posedge CLK) begin
+  //   $display("instr: %h", InstrF, " pcF: %h", PCF, "/n");
+  // end
+
 endmodule

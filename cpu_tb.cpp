@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include "vbuddy.cpp"    
-#define MAX_SIM_CYC 1000000
+#define MAX_SIM_CYC 5000000
 
 int main(int argc, char **argv, char **env) {
   int simcyc;     // Simulation Cycle 
@@ -42,14 +42,14 @@ int main(int argc, char **argv, char **env) {
     }
 
     // Test Reference
-    if (simcyc>500000 && simcyc% 5 == 0) {
+    if (simcyc>1000000 && simcyc%15 == 0) {
       vbdPlot(cpu->a0,0,255);
     } 
 
     // Test F1Lights
-    //cpu->trigger = vbdFlag() || vbdGetkey() == 't'; 
-    //vbdBar(cpu->a0);
-    //vbdCycle(simcyc);
+    // cpu->trigger = vbdFlag() || vbdGetkey() == 't'; 
+    // vbdBar(cpu->a0);
+    // vbdCycle(simcyc);
     
   }
   // Exit 2

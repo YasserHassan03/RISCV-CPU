@@ -25,3 +25,23 @@ F1Lights: test/Assembly/F1Lights.s
 	@rm test/Memory/F1Lights.out
 	@rm test/Memory/F1Lights.out.reloc
 	@rm test/Memory/F1Lights.bin
+
+pdfPipelined: test/Assembly/pdfPipelined.s
+	@riscv64-unknown-elf-as -R -march=rv32im -mabi=ilp32 -o test/Memory/pdfPipelined.out test/Assembly/pdfPipelined.s
+	@riscv64-unknown-elf-ld -melf32lriscv -e 0xBFC00000 -Ttext 0xBFC00000 -o test/Memory/pdfPipelined.out.reloc test/Memory/pdfPipelined.out
+	@riscv64-unknown-elf-objcopy -O binary -j .text test/Memory/pdfPipelined.out.reloc test/Memory/pdfPipelined.bin
+	@riscv64-unknown-elf-objdump -D -S -l -F -Mno-aliases test/Memory/pdfPipelined.out.reloc > test/Assembly/pdfPipelined.asm
+	@od -v -An -t x1 test/Memory/pdfPipelined.bin | tr -s '\n' | awk '{pdfPipelined=pdfPipelined};1' > test/Memory/pdfPipelined.mem
+	@rm test/Memory/pdfPipelined.out
+	@rm test/Memory/pdfPipelined.out.reloc
+	@rm test/Memory/pdfPipelined.bin
+
+F1LightsPipelined: test/Assembly/F1LightsPipelined.s
+	@riscv64-unknown-elf-as -R -march=rv32im -mabi=ilp32 -o test/Memory/F1LightsPipelined.out test/Assembly/F1LightsPipelined.s
+	@riscv64-unknown-elf-ld -melf32lriscv -e 0xBFC00000 -Ttext 0xBFC00000 -o test/Memory/F1LightsPipelined.out.reloc test/Memory/F1LightsPipelined.out
+	@riscv64-unknown-elf-objcopy -O binary -j .text test/Memory/F1LightsPipelined.out.reloc test/Memory/F1LightsPipelined.bin
+	@riscv64-unknown-elf-objdump -D -S -l -F -Mno-aliases test/Memory/F1LightsPipelined.out.reloc > test/Assembly/F1LightsPipelined.asm
+	@od -v -An -t x1 test/Memory/F1LightsPipelined.bin | tr -s '\n' | awk '{F1LightsPipelined=F1LightsPipelined};1' > test/Memory/F1LightsPipelined.mem
+	@rm test/Memory/F1LightsPipelined.out
+	@rm test/Memory/F1LightsPipelined.out.reloc
+	@rm test/Memory/F1LightsPipelined.bin

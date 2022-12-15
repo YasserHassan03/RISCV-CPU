@@ -7,6 +7,8 @@ make clean
 # Convert Assembly to Machine code
 make reference
 make F1Lights
+make pdfPipelined
+make F1LightsPipelined
 
 # run Verilator to translate Verilog into C++, including C++ testbench
 verilator -Irtl/Latest -Wall --cc --prof-cfuncs -CFLAGS -DVL_DEBUG --trace cpu.sv --exe cpu_tb.cpp

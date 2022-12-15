@@ -92,7 +92,7 @@ module MainDecoder (
         RegWrite  = 1'b1;
       end
     // Invalid 
-      default: $display("Invalid Instruction");
+      default: ;
     endcase
   end
 

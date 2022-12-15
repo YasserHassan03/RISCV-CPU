@@ -12,7 +12,7 @@ module InstrMemory #(
   // Load ROM from mem file
   initial begin
     $display("Loading ROM");
-    $readmemh("./test/Memory/pdf.mem", ROM);
+    $readmemh("./test/Memory/pdfPipelined.mem", ROM);
     $display("Instructions written to ROM successfully");
   end
 

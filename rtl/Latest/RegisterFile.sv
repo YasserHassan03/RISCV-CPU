@@ -29,6 +29,7 @@ module RegisterFile #(
 
   // Write to register file
     always_ff @(negedge CLK) begin
+    // $display( " s4:%h", REG_FILE[20], " s5:%h", REG_FILE[21], " s6:%h", REG_FILE[22], " a0:%h", REG_FILE[10], " a1:%h", REG_FILE[11], " a2:%h", REG_FILE[12], " a3:%h", REG_FILE[13], " a4:%h", REG_FILE[14], " a5:%h", REG_FILE[15], " t3%h", REG_FILE[28]);
     if (WE3 & A3 != 0) REG_FILE[A3] <= WD3;
     if (trigger) REG_FILE[5] <= 32'b1;
   end
