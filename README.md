@@ -72,7 +72,7 @@ Note: for jumps and branch, our immediate starts from 1 not 0 because you are ju
 We have a case for each type where the output corresponds to each type of concatenation shown above in the image based on Immsrc.
 
 ### ALU 
-The ALU section consists of the Arithmetic Logic Unit which and a register file. The register file implements the registers of the processor. The main input to the ALU is ALUControl which determines which operation is supposed to be performed. We used a 4 bit wire in order to have enough binary combinations to distinguish between each desired operation. This was required to choose between ADD/SUB operations (which both have 000 as the 3 LSBs) and the logical/arithmetic right shift operations (which both have 101 as the 3 LSBs). The MSB is used to choose between these and comes from funct7 bit 5. The additional input bit overcame the problem of not having enough combinations for the different operations required.
+The ALU top module consists of the Arithmetic Logic Unit and register file. The register file implements the registers of the processor. The main input to the ALU is ALUControl which determines which operation is supposed to be performed. We used a 4 bit wire in order to have enough binary combinations to distinguish between each desired operation. This was required to choose between ADD/SUB operations (which both have 000 as the 3 LSBs) and the logical/arithmetic right shift operations (which both have 101 as the 3 LSBs). The MSB is used to choose between these and comes from funct7 bit 5. The additional input bit overcame the problem of not having enough combinations for the different operations required.
 This enabled the different cases to be implemented easily as shown below:
 
 ```verilog
