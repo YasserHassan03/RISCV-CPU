@@ -49,6 +49,6 @@ module ControlUnit (
   );
 
   // Assigns PCSrc
-  assign PCSrc = (Branch & (funct3[0] ^ Zero)) || Jump;
+  assign PCSrc = (Branch & (funct3[0] ^ funct3[2] ^ Zero)) || Jump;
 
 endmodule
