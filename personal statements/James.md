@@ -148,7 +148,7 @@ Also the design choice to use a ternary operator (mux) as opposed to another cas
 
 ## [Store](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/StoreMemory.sv)
 
-[*Using example from slide 12 lecture 6 again*](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/LoadMemory.sv)
+[*Using example from slide 12 lecture 6 again*](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/datamem.png)
 
 The store memory block is very similar to the above load memory block however there is no need for a unsigned operation because the data is not being extracted from memory rather written to so we only want to overwrite the bytes/half-words we want to change (we don't need to extend the data to 32 bits rather only select the relevant bytes)
 For example say `s3` holds the value `0x12345678` `sh s3, 0x8` would put the value `0x56782842` into word 2 (overwriting the top half-word with the 16 LSBs of the data in we don't have an instruction to choose the 16 MSBs because this could be achieved by performing a shift operation and this is "**Reduced Instruction Set** Computing")
