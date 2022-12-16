@@ -8,7 +8,7 @@ I was mainly in charge of the Control Decoders. This required a great deal of co
 
 ### Initial ALU and Main Decoder top view 
 
-<img width="662" alt="Screenshot 2022-12-12 at 12 35 52" src="https://user-images.githubusercontent.com/116260803/207046709-8aafcf19-7cbc-48a6-9f66-cbe0b43898f8.png">
+<img height="400" alt="Screenshot 2022-12-12 at 12 35 52" src="https://user-images.githubusercontent.com/116260803/207046709-8aafcf19-7cbc-48a6-9f66-cbe0b43898f8.png">
 
 
 As seen in the picture above (taken from lecture 7), the control unit takes in 4 inputs, the zero flag (used for branches) , opcode (determines which type of instruction we are doing), funct3 (tells us which ALU instruction), and funct7 bit 5 (this distinguishes between arithmetic/logical shifts and add/sub).
@@ -55,7 +55,7 @@ Finally, since it is a branch instruction we set branch signal equal to 1 so tha
 # ALU Decoder
 
 ### ALU Decoder logic taken from Lecture 7
-![](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/Lecture7ALUDecode.png)
+<img width="451" alt="Screenshot 2022-12-16 at 11 32 59" src="https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/Lecture7ALUDecode.png">
 
 Originally, I used nested case statements in the ALU Decoder with ALUOp, op5, funct7<sub>5</sub> and funct3 as the selects and ALUControl as the output. This was because at the time of Lab 4 we simply followed lectures as close as was possible and case should automatically synthesize an optimal circuit. However, I did not like this implementation as it was ***"too brute force"***. Not only that, my teamate also requires the output ALUControl contain extra bits from funct7<sub>5</sub> to differentiate between add/sub and the arithmetic/logical shifts. 
 
