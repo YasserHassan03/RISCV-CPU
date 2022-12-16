@@ -89,6 +89,9 @@ vbdCycle(simcyc);
 
 ## Pipelining
 
+## Updated Pipeline Schematic
+<img height="400" src="https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/PipelineUpdatedSchematic.png">
+
 During pipelining we worked as a team to modify and redesign the pipelined schematic provided to us in lectures. This was necessary as the schematic provided was incomplete and so we had to analyse the schematic and compare it against the requirements to pipeline the CPU, like adding registers to each stage, and adding/extending signals so they can be saved for the next stage to use after completing the previous instruction. An important modification that was made was the dismantling of ```ALUTop.sv``` into its individual components (register file, ALU and data memory).
 
 ### ALUtop Dismantling
@@ -134,10 +137,6 @@ assign PCSrcE = (BranchE & (funct3MSBE ^ (funct3LSBE ^ ZeroE))) || JumpE;
 // PCTarget Logic
 assign PCTargetE = ImmExtE + PCE;
 ```
-
-## Updated Pipeline Schematic
-<img height="400" src="https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/PipelineUpdatedSchematic.png">
-
 
 ## Reflections
 Overall, I am satisfied with the results of this project. Tasks were well delegated and our team were able to communicate with each other and as a result we joined our various backgrounds and expertise to tackle individual issues we stumbled upon as well as cover for areas in which we lacked. While we may not have been able to implement cache or the other extensions, I feel that the demands of this project provided me with the push I needed to prompt a more enriched understanding of the RISC-V architecture and how certain improvements can be made to improve efficiency in practice (i.e. pipelining, cache, etc). Had there been more time, I would have liked to have played around with git commands more so that I'm more confident managing code with collaborative projects such as this one as opposed to my fairly surface level understanding at the time of writing this.
