@@ -1,10 +1,10 @@
-# Introduction:
+## Introduction:
 
 
 Following the lecture slides from lecture 7 we decided  split the Control Unit
-I was mainly in charge of the Control Decoders. This required a great deal of communication between all other members. I often found myself as the middle man when communicating between the others and felt as though towards the end we were working fluidly as a team. Due to being the principle contributer of the decoders it was natural that I would have also work on debugging. -- CHANGE
+I was mainly in charge of the Control Decoders. This required a great deal of communication between all other members. I often found myself as the middle man when communicating between the others and felt as though towards the end we were working fluidly as a team. Due to being the principle contributer of the decoders it was natural that I would have also work on debugging. 
 
-# Main Decoder
+## Main Decoder
 
 ### Initial ALU and Main Decoder top view 
 
@@ -17,34 +17,28 @@ With our Lab 4 CPU, there were only a small selection of instructions that we ha
 
 In addition to ImmSrc requiring and additional bit, through  our combined effort we decided on 5 additional control signals which would be required from the Main Decoder Module in order to implement all additional instructions found in Lecture 6: 
 
-* Jump
-  * Used for JAL and JALR
-  
-* JumpReg
-  * Used for JAL  
-  
-* PCUppSrc
-  * Used for AUIPC
+### Added Control Signals
 
-* ImmUppSrc
-  * Used for LUI
-
-* Type<sub>[2:0]</sub>
-  * Used for all Store and Load instructions
+|Control Signal|Instructions   |
+|----------|------------------------|
+|Jump      |JAL & JALR     |
+|JumpReg   |JALR           |
+|PCUppSrc  |AUIPC          |
+|ImmUppSrc |LUI            |
+|Type<sub>[2:0]</sub>|All Loads & Stores|
 
 As I previously added comments for the additional instruction op cases, the only step from here was to assign the correct values to the correct op cases for the given instructions. As simple as this sounds, due to slight carelessness, I still managed to mess it up in the beggining. Luckily with the help of ***the team*** and good communication between all members we were able to debug these errors swiftly.
 
 ### Example
 
 ```systemverilog
-   // Branch - B   
-      // Branch Instructions    
-      7'd99: begin
-        ImmSrc = 3'b011;
-        ALUOp  = 2'b01;
-        ALUSrc = 1'b0;
-        Branch = 1'b1;
-      end
+// Branch - B       
+   7'd99: begin
+     ImmSrc = 3'b011;
+     ALUOp  = 2'b01;
+     ALUSrc = 1'b0;
+     Branch = 1'b1;
+   end
 ```
 The 7'd99 at the start here corresponds to a branch instruction and is taken from the risc-v instruction set.
 Immsrc is set to '011' beacuse in our sign extend unit, we have chosen to set 011 corresponding to read Imm as branch instructions. 
@@ -52,7 +46,7 @@ The ALUop 2'b01 is because in ALU decoder we have chosen this to correspond to b
 The ALUsrc is set to 0 so that in our ALU we can compare two register values. The ALUsrc acts as a select to a mux just before the ALU thus deciding what goes into the ALU.
 Finally, since it is a branch instruction we set branch signal equal to 1 so that we can change PCSRC as talked about above.
 
-# ALU Decoder
+## ALU Decoder
 
 ### ALU Decoder logic taken from Lecture 7
 <img width="451" alt="Screenshot 2022-12-16 at 11 32 59" src="https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/Lecture7ALUDecode.png">
@@ -61,23 +55,25 @@ Originally, I used nested case statements in the ALU Decoder with ALUOp, op5, fu
 
 In order to resolve this, we discussed what we could do in order to better encode the ALUControl and thus we had to reorder the case statement inside the ALU module. Furthermore, it occurred to us that our new signal ***Type<sub>[2:0]</sub>*** could solely be mapped to funct3 for load and store instructions. Thus, we ended up with a very nice method to implement ALUControl for all instructions that require it as a logic function of funct3, funct7<sub>5</sub> and single case statement for ALUOp. 
 
-This can be seen in the code below and in [this commit](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/9af154a38f7c214f65b6d99d54e3a47248f263a4):
+
+### [**HIGHLIGHTED COMMIT**](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/9af154a38f7c214f65b6d99d54e3a47248f263a4)
+This can be seen in the code below and in the commit above:
 
 ```systemverilog
-    // Load Store 
-    2'b00: begin
-      ALUControl = 4'b0000;
-      Type = funct3;
-    end
-    // Branch (bne/beq = 0000, blt/bge = 0010, bltu/bgeu = 0011)
-    2'b01:   ALUControl = funct3[2] ? {{3'b001}, {funct3[1]}} : 4'b0000;
-    // ALU bit 3 only matters for add/sub vs rsl/rsa so we can us funct3[2] to determine it
-    2'b10:   ALUControl = {{funct3[2] ? {funct7} : {funct7 & op5}}, {funct3}};
-    // Default
-    default: ALUControl = 4'b0000;
+// Load Store 
+2'b00: begin
+  ALUControl = 4'b0000;
+  Type = funct3;
+end
+// Branch (bne/beq = 0000, blt/bge = 0010, bltu/bgeu = 0011)
+2'b01:   ALUControl = funct3[2] ? {{3'b001}, {funct3[1]}} : 4'b0000;
+// ALU bit 3 only matters for add/sub vs rsl/rsa so we can us funct3[2] to determine it
+2'b10:   ALUControl = {{funct3[2] ? {funct7} : {funct7 & op5}}, {funct3}};
+// Default
+default: ALUControl = 4'b0000;
 ```
 
-# Sign Extend Unit
+## Sign Extend Unit
 
 Each Imm set-up is different for each type of instruction (I,UI,S,B,J) as seen below (from lecture 6):
 
@@ -88,23 +84,23 @@ Note: for jumps and branch, our immediate starts from 1 not 0 because you are ju
 We have a case for each type where the output corresponds to each type of concatenation shown above in the image based on Immsrc. This can be seen below:
 
 ```systemverilog
-  case (ImmSrc)
-    // Immediate
-    3'b000:  ImmExt = {{20{Imm[31]}}, {Imm[31:20]}};
-    // Upper Immediate
-    3'b001:  ImmExt = {{Imm[31:12]}, {12{1'b0}}};
-    // Store
-    3'b010:  ImmExt = {{20{Imm[31]}}, {Imm[31:25]}, {Imm[11:7]}};
-    // Branch
-    3'b011:  ImmExt = {{20{Imm[31]}}, {Imm[7]}, {Imm[30:25]}, {Imm[11:8]}, {1'b0}};
-    // Jump      
-    3'b100:  ImmExt = {{12{Imm[31]}}, {Imm[19:12]}, {Imm[20]}, {Imm[30:21]}, {1'b0}};
-    // Default
-    default: ImmExt = {32{1'b0}};
-  endcase
+case (ImmSrc)
+  // Immediate
+  3'b000:  ImmExt = {{20{Imm[31]}}, {Imm[31:20]}};
+  // Upper Immediate
+  3'b001:  ImmExt = {{Imm[31:12]}, {12{1'b0}}};
+  // Store
+  3'b010:  ImmExt = {{20{Imm[31]}}, {Imm[31:25]}, {Imm[11:7]}};
+  // Branch
+  3'b011:  ImmExt = {{20{Imm[31]}}, {Imm[7]}, {Imm[30:25]}, {Imm[11:8]}, {1'b0}};
+  // Jump      
+  3'b100:  ImmExt = {{12{Imm[31]}}, {Imm[19:12]}, {Imm[20]}, {Imm[30:21]}, {1'b0}};
+  // Default
+  default: ImmExt = {32{1'b0}};
+endcase
 ```
 
-# F1 machine code
+## F1 machine code
 
 ### State Machine
 
@@ -155,13 +151,13 @@ delay:
     
 ```
 
-# Make & Run Shell Scripts
+## Make & Run Shell Scripts
 
 Originially, we planned to have a seperate shell script for our Pipeline and Single Cycle CPU and use a Makefile which contained a different make our different assembly programs using the files provided for us and adjusting them slightly. This worked initially but required us to manually change the name of the memory files as well as the shell scripts to access the correct assembly codes. 
 
 This felt clunky and especially slow when testing our programs. To combat this, we had the idea a sepearate shell script called make.sh which would now take in arguments in when the file is ran on the terminal. 
 
-After some research we found a nice way to do this using bash commands to take the arguments using the $1, $2, $3, if statements and sed commands. 
+After some research we found a nice way to do this using bash commands to take the arguments using the `$1, $2, $3`, `if then fi` statements and `sed` commands. 
 
 Here are a few snippets from the make file
 
@@ -185,7 +181,23 @@ if [[ "$Instr" == "PDF"* ]]; then
     sed -i "s/START PDF \/\//START PDF \*\//" cpu_tb.cpp
 ```
 
-These show generally how the make file works, with the exclusion of the assembler as that is taken directly from the given Makefile but extracted into a shell script. The run.sh file is exactly like the old doit.sh but in with -I to allow the verilator command to iterate over the following directory: rtl/$Dir where Dir is a variable read as $1 or the first argument after the filname.
+#### # Error Check 
+* Simply checks all three arguments to see if any are being passed through incorrectly
+* Provides Error message stating incorrect file name
+* Adds 1 to Pass so that we can run the make if all are passed
+
+#### # Replace mem an instruction files
+* Goes to InstrMemory and DataMemory 
+* Replaces `.hex` and `.mem` file names using `sed`
+
+#### # Format testbench 
+* comments out and comments correct lines for test bench
+* based on whether F1 program or PDF program is being run or not 
+
+### Explanation
+
+These show generally how the make file works, with the exclusion of the assembler as that is taken directly from the given `Makefile` but extracted into a shell script. The `run.sh` file is exactly like the old `doit.sh` but using the `-I<dir>` to allow the verilator command to iterate over the following directory: `rtl/$Dir` where `Dir` is a variable read as `$1` or the first argument after the filname.
+
 
 ### Example code
 
@@ -193,14 +205,68 @@ These show generally how the make file works, with the exclusion of the assemble
 verilator -Irtl/$Dir -Wall --cc --prof-cfuncs -CFLAGS -DVL_DEBUG --trace cpu.sv --exe cpu_tb.cpp
 ```
 
-### Effective code if ran with ./run.sh SingleCycle
+### Effective code if ran with `./run.sh SingleCycle`
 
-for example ./run.sh SingleCycle would run:
 ```bash
 verilator -Irtl/SingleCycle -Wall --cc --prof-cfuncs -CFLAGS -DVL_DEBUG --trace cpu.sv --exe cpu_tb.cpp
 ```
 
-# Reflection
+## Pipelining
 
-Overall, I believe this was an extremely beneficial project as it has taught much not only with the course, system verilog and the RISC-V architecture, but also allowed my curiosity to explore multiple avenues such as shell scripting, bash, git, and much more. It was amazing working as a team communicating and coordinating between the members and each module, especially when things were going wrong. Going forward I would like to use git and github more properly such as by using branches to seperate each others work on the project and merging when necessary, rather than sharing files locally through messages and email as we have done. Furthermore, I would have liked to have had the time to get onto cache as well as potentially adding a hazard unit to our pipelined cpu. 
+### Pipelined Updated Schematic
+<img height="400" src="https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/PipelineUpdatedSchematic.png">
+
+### Single Cycle three 1-bit Result -> WD3 MUXs 
+```systemverilog
+# Inside Memorytop.sv
+assign Result = ResultSrc ? Data : ALUResult;
+
+# Inside cpu.sv
+always_comb begin
+  ImmRes = ImmUppSrc ? ImmExt : Result;
+  WD3 = Jump ? PC + 4 : ImmRes;
+end
+```
+
+When implementing pipelining with the control unit and immediate extender, A few changes had to be made. First and formost, the control unit can no longer take the Zero flag as an input as well as output PCSrc. This is because the Zero flag for the inctruction at the **Decode** stage will only be calculater in the next cycle. This creates an impossibility for combinationl logic to be made inside the Control Unit. This PCSrc must be calculated in the **Execute** stage as can be seen in the image above
+
+One ***Design Decision*** that we made was to replace the two MUX's previosuly connected to WD3 in the register file. The two tertiary MUX's for the WD3 input inside the always_comb block are for LUI and Jump instructions respectively. For lui, the immediate operator needs to bypass the ALU as it has no buffer instruction. We also needed to write PCPlus4 to the register file during both jump instructions which was implemented using the second MUX. The lui bypass worked for the single cycle processor as bypassing stages would have no affect on the outputs for following instructions/cycles. 
+
+However, this is simply not feasible in the Pipelined processor. This is due to the fact that for lui, by bypassing the ALU, it will be skipping the **Execute, Memory AND Write** clock stages. Thus being written too early and may cause a data hazard in some programs. To avoid this we must bring the MUX and Select to the **Write** stage. This is a possible implementation however it would be a waste of a control bit (ImmUppSrc). This is because as can be seen in the lecture 8 pipeline diagram, ResultSrc has been changed to 2 bits, but is only connected as a select for three inputs. We then decided to use the last case of ResultSrc to act as the final select for the lui instruction. This then meant we had to pass ImmExt through all stages up until the **Write** stage in cpu.sv to be taken into the 2 bit MUX. I also decided to rename PCUppSrc to RD1Src for better readability.
+
+### Pipelined one 2-bit Result -> WD3 MUX
+
+```systemverilog
+// Result MUX
+always_comb begin
+  case (ResultSrcW)
+      2'b00:  ResultW = ALUResultW;
+      2'b01:  ResultW = ReadDataW;
+      2'b10:  ResultW = PCPlus4W;
+      2'b11:  ResultW = ImmExtW;
+  endcase
+end
+```
+
+### Pipelined UI cases in Main Decoder
+
+```systemverilog
+// Upper Immediate - UI
+ // Add Upper Immediate and PC to Reg
+ 7'd23: begin
+   ImmSrc    = 3'b001;
+   RegWrite  = 1'b1;
+   RD1Src    = 1'b1;
+ end
+ // Load Upper Immediate to Reg
+ 7'd55: begin
+   ImmSrc    = 3'b001;
+   RegWrite  = 1'b1;
+   ResultSrc = 2'b11;
+ end
+```
+
+## Reflection
+
+Overall, I believe this was an extremely beneficial project as it has taught me not only about the course, system verilog and the RISC-V architecture, but also allowed my curiosity to explore multiple avenues such as shell scripting, bash, git, and much more. It was amazing working as a team; communicating and coordinating between each other, especially when things were going wrong. Going forward I would like to use git and github more properly, such as by using branches to seperate each others' work on the project and merging when necessary, rather than sharing files locally through messages and email as we have regrettably done. Furthermore, I would have liked to have had the time to get onto cache as well as potentially adding a hazard unit to our pipelined cpu. 
 
