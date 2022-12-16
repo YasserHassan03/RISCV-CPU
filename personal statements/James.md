@@ -3,7 +3,7 @@ The sections which I were responsible for were the program counter, the RAM load
 
 However, due to the highly interconnected nature of the project with the need for inputs and outputs in my module being from other sections like (ALU, Control etc), I often collaborated with other [members of the team](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/graphs/contributors) to ensure that the naming of wires etc was standard and that the modules would interact with each other in the required way.
 
-# [Program Counter](b32b3fddf4aad91a5fe431548dc000da9c4b4f72)
+# [Program Counter](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/b32b3fddf4aad91a5fe431548dc000da9c4b4f72)
 
 Overall the program counter was fairly simple to make using the diagram from the lectures and the only difference between the program counter from LAB 4 was an additional 
 multiplexer for the JALR instruction. 
@@ -84,10 +84,10 @@ endmodule
 
 Note: We concatenate with the largest byte address within the multiple of 4 being the most significant and the lowest being the least because RISC-V is little-endian.
 
-# [Memory Read/Write blocks](5f27759820d96d0592d9490b78e0ef718877016f)
+# [Memory Read/Write blocks](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/5f27759820d96d0592d9490b78e0ef718877016f)
 
 Because the memory in a RISC-V processor is byte-addressable we need some additional logic to be able to load/store bytes or halfwords or words for instructions such as lb/sb , lh/sh, lw/sw and lbu/lhu (more on these later).
-In order to perform the above operations we need to output or input a 32 bit data values which is formed from the relevant bits extracted from the memory. Another key distinction for these blocks is that RISC-V memory is [little endian](3dab1128857fcf610456673179bf41b453f7ae6b). 
+In order to perform the above operations we need to output or input a 32 bit data values which is formed from the relevant bits extracted from the memory. Another key distinction for these blocks is that RISC-V memory is [little endian](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/3dab1128857fcf610456673179bf41b453f7ae6b). 
 Note: After collaboration with the control logic we decided that a 3 bit control signal *Type* would be used to determine the type of addressing mode. The table below documents the control code standards we used.
 
 | `Type[3:0]`| Addressing mode    |
@@ -174,7 +174,7 @@ case (Type)
 
 All of the above operations are performed by concatenating the existing word in the RAM with the desired byte/half-word that we want to write. Of course the word addressed data is read as normal (using multiples of 4 addresses).
 
-# [Pipelining](90e321e6e3a837e361f548b3f2ff3378f6236c6c)
+# [Pipelining](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/90e321e6e3a837e361f548b3f2ff3378f6236c6c)
 In order to implement pipelining we needed to insert registers between each of the five Fetch, Decode, Execute, Memory and Writeback stages. I added the register between the Decode and Execute stages. I also made sure that the register file was changed to be written on the NEGEDGE of CLK so that DATA can be written in the first half (rising edge) of the clock cycle and be written back for any following instruction in the second half (falling edge) of the clock cycle. 
 Other than this it was simply a matter of identifying signals which leave the Decode section and enter the Execute stage. 
 ```Verilog
@@ -249,12 +249,12 @@ One other change for the pipelined version of the PC module was moving the PCTar
 // PCTarget Logic
   assign PCTargetE = ImmExtE + PCE;
   ```
-*PCTargetE is assigned to the value of the ImmExtE plus PCE used for JAL and Branch instructions (we could have put this inside the PC using an input as before but we moved it [outside](0451370fa410d4f4874bc9eaaca7267bf25a280e) for clarity*
+*PCTargetE is assigned to the value of the ImmExtE plus PCE used for JAL and Branch instructions (we could have put this inside the PC using an input as before but we moved it [outside](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/0451370fa410d4f4874bc9eaaca7267bf25a280e) for clarity*
 
 # F1 Program pipelining
 
 Initially we had the idea of storing random values in the RAM and then using the time taken to press the trigger to choose a value for the F1 lights delay for the best "Randomness" however after discussing this in more detail we decided that this was not very practical and instead agreed on using the primitive polynomial method used in lab 3. 
-[Ahmad](https://github.com/ahumayde) wrote the F1 lights assembly program and explains how it woks in more detail in his personal statement. I [adapted](850926068f04a58656f76d114301d1276a7c1742) the program and made it suitable for our pipelined CPU design by identifying data/control hazards and inserting *NOP* instructions to delay the operation until the data had been written to register file or control signal had reached the [relevant stage](ec3e00c44f53d1de0ac4a8dcc1d416debbf79514).
+[Ahmad](https://github.com/ahumayde) wrote the F1 lights assembly program and explains how it woks in more detail in his personal statement. I [adapted](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/850926068f04a58656f76d114301d1276a7c1742) the program and made it suitable for our pipelined CPU design by identifying data/control hazards and inserting *NOP* instructions to delay the operation until the data had been written to register file or control signal had reached the [relevant stage](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/ec3e00c44f53d1de0ac4a8dcc1d416debbf79514).
 
 ```Assembly
 default:
