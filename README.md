@@ -1,7 +1,7 @@
 # iac-riscv-cw-32
 ## Introduction
 
-In the rtl folder you can find all the files we have worked and uploaded during the course of the project. These include the base folder, which has the lab 4 CPU built before we received the project brief. Also included in the rtl folder, is our adapted base cpu, called single-cycle, for our lab 5 as well as the pipelined version and a read me describing what each person has worked on. The test folder contains all our test files and a readme explaining the results we saw. You can find our individual personal statements, in the personal statement folder.
+In the rtl folder you can find all the files we have worked on and uploaded during the course of the project. These include the base folder, which has the lab 4 CPU built before we received the project brief. Also included in the rtl folder, is our adapted base cpu, called single-cycle, for our lab 5 as well as the pipelined version and a read me describing what each person has worked on. The test folder contains all our test files and a readme explaining the results we saw. You can find our individual personal statements, in the personal statement folder.
 This readme file describes how we implemented our cpu and how it works.
 
 ## How to run our program
