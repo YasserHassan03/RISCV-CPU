@@ -89,6 +89,18 @@ Note: We concatenate with the largest byte address within the multiple of 4 bein
 
 Because the memory in a RISC-V processor is byte-addressable we need some additional logic to be able to load/store bytes or halfwords or words for instructions such as lb/sb , lh/sh, lw/sw and lbu/lhu (more on these later).
 In order to perform the above operations we need to output or input a 32 bit data values which is formed from the relevant bits extracted from the memory. Another key distinction for these blocks is that RISC-V memory is little endian. 
+Note: After collaboration with the control logic we decided that a 3 bit control signal *Type* would be used to determine the type of addressing mode. The table below documents the control code standards we used.
+
+| Type[3:0] | Addressing mode    |
+|-----------|--------------------|
+| 000       | signed byte        |
+| 001       | signed half-word   |
+| 010       | word               |
+| 011       | N/A                |
+| 100       | unsigned byte      |
+| 101       | unsigned half-word |
+| 111       | N/A                |
+
 
 ## Load https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/LoadMemory.sv
 
@@ -164,6 +176,86 @@ All of the above operations are performed by concatenating the existing word in 
 # Pipelining
 In order to implement pipelining we needed to insert registers between each of the five Fetch, Decode, Execute, Memory and Writeback stages. I added the register between the Decode and Execute stages. I also made sure that the register file was changed to be written on the NEGEDGE of CLK so that DATA can be written in the first half (rising edge) of the clock cycle and be written back for any following instruction in the second half (falling edge) of the clock cycle. 
 Other than this it was simply a matter of identifying signals which leave the Decode section and enter the Execute stage. 
+```Verilog
+module DecExeff #(
+    parameter WIDTH = 32
+)(
+    input  logic              CLK,        
+    input  logic              RegWriteD,
+    input  logic [1:0]        ResultSrcD,
+    input  logic              MemWriteD,
+    input  logic              JumpD, 
+    input  logic [2:0]        TypeD,         
+    input  logic              BranchD,      
+    input  logic [3:0]        ALUControlD,
+    input  logic              ALUSrcD,       
+    input  logic              JumpRegD,
+    input  logic              funct3LSBD,       
+    input  logic              funct3MSBD,       
+    input  logic [WIDTH-1:0]  RD1,            
+    input  logic [WIDTH-1:0]  RD2,                    
+    input  logic [WIDTH-1:0]  PCD,         
+    input  logic [11:7]       RdD,         
+    input  logic [WIDTH-1:0]  ImmExtD,         
+    input  logic [WIDTH-1:0]  PCPlus4D, 
+    output logic              RegWriteE,         
+    output logic [1:0]        ResultSrcE,
+    output logic              MemWriteE,         
+    output logic              JumpE,         
+    output logic              JumpRegE,         
+    output logic [2:0]        TypeE,         
+    output logic              BranchE,         
+    output logic [3:0]        ALUControlE,         
+    output logic              ALUSrcE,
+    output logic              funct3LSBE, 
+    output logic             funct3MSBE,       
+    output logic [WIDTH-1:0]  RD1E,         
+    output logic [WIDTH-1:0]  RD2E,         
+    output logic [WIDTH-1:0]  PCE,         
+    output logic [11:7]       RdE,         
+    output logic [WIDTH-1:0]  ImmExtE,         
+    output logic [WIDTH-1:0]  PCPlus4E         
+);
+
+    always_ff@(posedge CLK) begin
+        RegWriteE <= RegWriteD;
+        ResultSrcE <= ResultSrcD;
+        MemWriteE <= MemWriteD;
+        JumpE <= JumpD;
+        JumpRegE <= JumpRegD;
+        TypeE <= TypeD;
+        BranchE <= BranchD;
+        ALUControlE <= ALUControlD;
+        ALUSrcE <= ALUSrcD;
+        funct3LSBE <= funct3LSBD;
+        RD1E <= RD1;
+        RD2E <= RD2;
+        PCE <= PCD;
+        RdE <= RdD;
+        ImmExtE <= ImmExtD;
+        PCPlus4E <= PCPlus4D;
+        funct3MSBE <= funct3MSBD;
+    end 
+
+endmodule
+```
+There is not much interesting to say about the above other than our design choices. I called all signals on the execute side "E" and "D" on the decode side. We also included *Type (which is used to determine the memory addressing mode), JumpReg (which is used for a JALR instruction), funct3LSB and funct3MSB (which is used 
+to calculate the PCSrc control signal used for branch, jump and jump and link instructions).*
+We decided on these standards after discussing the implementation of these instructions as a team.
+One other change for the pipelined version of the PC module was moving the PCTarget value out of the ALU module into the top module as this made it clearer for us to see where the signal comes from. 
+
+```Verilog
+// PCTarget Logic
+  assign PCTargetE = ImmExtE + PCE;
+  ```
+*PCTargetE is assigned to the value of the ImmExtE plus PCE used for JAL and Branch instructions (we could have put this inside the PC using an input as before but we moved it outside for clarity)*
+
+# F1 Program pipelining
+
+Initially we had the idea of storing random values in the RAM and then using the time taken to press the trigger to choose a value for the F1 lights delay for the best "Randomness" however after discussing this in more detail we decided that this was not very practical and instead agreed on using the primitive polynomial method used in lab 3. 
+Ahmad (https://github.com/ahumayde) wrote the F1 lights assembly program and explains how it woks in more detail in his personal statement. I adapted the program and made it suitable for our pipelined CPU design by identifying data/control hazards and inserting *NOP* instructions to delay the operation until the data had been written to register file or control signal had reached the [relevant stage](ec3e00c44f53d1de0ac4a8dcc1d416debbf79514)
+
+
 
 
 
