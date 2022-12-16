@@ -1,6 +1,5 @@
 # Explanation of our testing
 
-To test for single cycle, Run `./SingleCycle.sh` in terminal with the correct files loaded into the instruction and data memory
 ## F1 lights testing
 
 To test our program, we ran it using the do it file that is in the rtl, base folder. Our expected outcome is for each light to come on incrementally, when the trigger is pressed, then a random delay when they're all lit before the lights then turning off.
