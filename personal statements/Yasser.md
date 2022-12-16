@@ -78,3 +78,8 @@ I was also a lead in adding nops to the pdf assmebly file to allow our pipeline 
 We added nops for two reasons: data hazards and control hazards. We had Control hazards whenever we did a branch or a jump, so we always added two nops straight after to ensure that jump/branch had enough time to reach the PCsrc logic and return to PC counter before another instruction is read in. Whereas Data hazards appeared whenever we tried accessing/fetching from a register which hadn't finished it's write cycle yet. 
 
 ## Reflection
+
+Overall I think the group worked very well together in making sure everyone understood everything. Personally I found this project to be a challenging yet succesfull effort which forced me out of my comfort zone, to learn git and helped me understand some parts of the cpu better when I was forced to explain them to others whilst also finding it helpful for people to explain to me some parts I didn't understand as well. It was also very helpful to implement everything we had discussed in lectures in our design as it helped solidfy my learning of the subject.
+
+Having finished this project, if I were to do it again, I would definetly consider having multiple branches for each section we worked on as well as possibly commiting more to git rather than working locally for the majority of the project. I would also try and do cache which we didn't quite have time to fuly get onto due to time constraints.
+
