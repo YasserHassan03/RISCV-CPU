@@ -57,7 +57,6 @@ _loop2:                         # repeat
     nop
     sb      t1, 0(a6)           #     update bin count
     nop
-    nop
     addi    a2, a2, 1           #     point to next data in array
     bne     t1, a4, _loop2      # until bin count reaches max
     nop
@@ -81,4 +80,3 @@ _loop3:                         # repeat
     ret
     nop
     nop
-
