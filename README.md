@@ -17,11 +17,11 @@ The first step to run our program is to run
 ``` shell
  ./make.sh (processor) (assembly file) (memory file when using pdf)
 ```
-These are the possibilities for processor (all of which are case sensitive: SingleCycle, Pipeline)
+These are the possibilities for ***processor*** (all of which are case sensitive: ```SingleCycle```, ```Pipeline```)
 
-The possibilities for assemble file are: F1SC (corresponding to single cycle F1), F1PL (corresponding to a pipelined F1), PDFSC (corresponds to pdf single cycle) and PDFPL (corresponding to a pipelined pdf)
+The possibilities for ***assembly file*** are: ```F1SC``` (corresponding to single cycle F1), ```F1PL``` (corresponding to a pipelined F1), ```PDFSC``` (corresponds to pdf single cycle) and ```PDFPL``` (corresponding to a pipelined pdf)
 
-Finally the possibilities for memory file are: noisy, sine, gaussian, triangle
+Finally the possibilities for ***memory file*** are: ```noisy```, ```sine```, ```gaussian```, ```triangle```
 
 The second step of our program is running the file you made like this :
 
