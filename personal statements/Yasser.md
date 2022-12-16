@@ -43,7 +43,12 @@ The main challenge in the ALU section was to find a way to deal with set less th
 
 ## Register file
 
-Initially when writing the the register file, we would just check if the write enable was 1and then write to a3 our write address :
+The register file is always initaiated to zero at the start to make sure there is nothing there that shouldnt be. This is done by going through a for loop and changing each possible location in the register file to 0:
+``` verilog
+ initial for (int i = 0; i < $size(REG_FILE); i++) REG_FILE[i] = 32'b0;
+```
+On the rising edge, we write the write address into A3 as long as the write enable (WE3) is high and A3 doesn't equal 0.
+Initially when writing the the register file, we would just check if the write enable was 1 and then write to a3 our write address :
 
 ``` verilog
  if (WE3) REG_FILE[A3] <= WD3;
@@ -53,6 +58,9 @@ However while testing , we ran into trouble especially with a ret instruction wh
 ```verilog
  if (WE3 & A3 != 0) REG_FILE[A3] <= WD3;
 ```
+
+On the rising edge, we also make t0 high when trigger is high. This is done to maximise tha amount of time t0 is high to allow maximal time for the lfsr to run and calculate a random number.
+
 ## Data memory
 
 In data memory all we do is specify which file we are reading from and then put each byte from the instruction word into a specific pasrt of the write address. We had to make sure when testing that we start writing memory at the desired address specified by the memory map. Initially as can be seen in this [commit](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/560159f1c84dba04be77ff66af514d4028afd2f9#diff-09e7f6ae93159d1711a1d00f971f66a606e56e2357adf7d03bf1256bad402695) we had it in big endian. However, due to the reference program being in little endian, we had to change the file to comply like [this](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/395c80ac38ef29dd77dce1344d4ac235b984049a)
