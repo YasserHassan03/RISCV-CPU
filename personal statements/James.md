@@ -79,7 +79,7 @@ case (Type)
       endcase
       
 ```
-*note the variable type is from an input from control and determines the type of addressing required for the instruction executed*
+*note the variable **Type** is from an input from control and determines the type of addressing required for the instruction executed*
 
 on the other hand if we wanted to do an unsigned operation we would use lbu s3, 0x3 which would result in register s3 holding 0x000000AB (where we do an unsigned extension)
 ``` verilog
