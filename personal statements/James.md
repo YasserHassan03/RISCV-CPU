@@ -1,7 +1,7 @@
 # Introduction
-The sections which I was responsible for was the program counter and the RAM load/store modules.
+The sections which I were responsible for were the program counter, the RAM load/store modules and some pipelining.
 
-However, due to the highly interconnected nature of the project with the need for inputs and outputs in my module being from other sections like (ALU, Control etc), I often collaborated with other members of the team to ensure that the naming of wires etc was standard and that the modules would interct with each other in the required way.
+However, due to the highly interconnected nature of the project with the need for inputs and outputs in my module being from other sections like (ALU, Control etc), I often collaborated with other [members of the team](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/graphs/contributors) to ensure that the naming of wires etc was standard and that the modules would interact with each other in the required way.
 
 # [Program Counter](b32b3fddf4aad91a5fe431548dc000da9c4b4f72)
 
@@ -27,12 +27,12 @@ always_comb begin
 
 The additional mux is controlled by a select called JumpReg which comes from the control logic and determines if a JALR is required (JALR would need Result to be assigned to PCNext, Jumps and Branches need PCTarget to be assigned as next PC, normal isntructions would need PCPlus4). 
 
-Deciding on this design choice required collaboration with the control unit and ALU.
+Deciding on this design choice required collaboration with the control unit and ALU teams.
 
 ## PC Register 
 
 Inside the Program counter there is also a register which is used to store the next program counter value.
-This was already implemented from lab4 however required some minor adjustments in order to fit with the recommended memory map. The first address is set to 0xBFC00000 for the instruction memory.
+This was already implemented from Lab 4 however required some minor adjustments in order to fit with the recommended memory map. The first address is set to 0xBFC00000 for the instruction memory.
 ```verilog
 module PCReg #(
     parameter D_WIDTH = 32
