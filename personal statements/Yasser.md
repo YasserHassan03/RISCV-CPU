@@ -78,7 +78,7 @@ We assigned the output Read data as a concatenation of bytes to form an instruct
 
 For pipelining I wrote the Exemem.ff file to comply with the following:
 
-<img width="451" alt="Screenshot 2022-12-16 at 11 32 59" src="https://user-images.githubusercontent.com/116260803/208089347-57087103-6b8d-4ef5-9ab0-6438137ce71e.png">
+<img width="451" alt="Screenshot 2022-12-16 at 11 32 59" src="https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/PipelineUpdatedSchematic.png">
 
 Having all the inputs come seen as inputs to the flip flop and then on the rising clock edge, they all become the outputs seen in the diagram
 
