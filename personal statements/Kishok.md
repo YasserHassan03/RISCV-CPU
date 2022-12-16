@@ -46,17 +46,10 @@ Since the data memory can only read in words of 4 bytes, the last 2 bits of the 
 
 ### Memory Address Inputs
 
-````sv
+```sv
 DataMemory DM (
     .A  ({{ALUResult[31:2]}, {2'b00}}),
 ```
-
-
-
-
-
-
-
 
 ## CPU Top Level Design
 
