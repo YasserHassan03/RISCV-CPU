@@ -24,7 +24,7 @@ always_comb begin
     PCNext   = JumpReg ? Result : PCInterm;
   end
   ```
-*here the first mux is the original with the value PCinterm being fed into the additional mux which also takes the reult from the ALU*
+*here the first mux is the original with the value PCinterm being fed into the additional mux which takes the result from the ALU as a second input*
 
 The additional mux is controlled by a select called JumpReg which comes from the control logic and determines if a JALR is required. 
 
