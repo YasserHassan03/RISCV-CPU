@@ -15,9 +15,9 @@ Otherwise if you are on Windows please run using this previous [comit](https://g
 
 The first step to run our program is to run 
 ``` shell
- ./make.sh (type of program goes here) (assembly file) (memory file when using pdf)
+ ./make.sh (processor) (assembly file) (memory file when using pdf)
 ```
-These are the possibilities for type of program (all of which are case sensitive: SingleCycle, Pipeline
+These are the possibilities for processor (all of which are case sensitive: SingleCycle, Pipeline)
 
 The possibilities for assemble file are: F1SC (corresponding to single cycle F1), F1PL (corresponding to a pipelined F1), PDFSC (corresponds to pdf single cycle) and PDFPL (corresponding to a pipelined pdf)
 
