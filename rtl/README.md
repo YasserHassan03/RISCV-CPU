@@ -22,8 +22,10 @@ Due to the nature of the project being interconnected and the willingness and ea
 |SignExtend.sv    |  x           |      x         |    x       |  *      |
 |ALUDecode.sv     |  x           |      x         |    x       |  *      |
 |MainDecoder.sv   |  x           |      x         |    x       |  *      |
-|F1Lights.txt     |  x           |      x         |    x       |   *     |
-|F1Lights.hex     |  x           |      x         |    x       |  *      |
+|F1SC.s           |  x           |      x         |    x       |  *      |
+|make.sh          |  x           |      x         |    x       |  *      |
+|run.sh           |  x           |      x         |    x       |  *      |
+
 
 x =Also helped        * =Principle Contributor
 
@@ -78,6 +80,8 @@ I was mainly in charge of the control and sign extend unit as well as the F1 mac
 
 -MainDecoder.sv 
 
--F1lights.txt 
+-F1SC.s
 
--F1lights.hex
+-make.sh
+
+-run.sh
