@@ -92,7 +92,7 @@ on the other hand if we wanted to do an unsigned operation we would use lbu s3, 
         2'b11: RDOut = {{24{1'b0}}, {RDIn[31:24]}};
       endcase
 ```
-Half word adressing would work in a similar way however would have addresses which increment in steps of 2. (eg lh s3, 0x2 would result in s3 holding 0xFFFFEF78 or 
+Half word addressing would work in a similar way however would have addresses which increment in steps of 2. (eg lh s3, 0x2 would result in s3 holding 0xFFFFEF78 or 
 lhu s3, 0x2 would result in s3 holding 0x0000EF78)
 ```verilog
 // Unsigned Half
@@ -101,7 +101,8 @@ lhu s3, 0x2 would result in s3 holding 0x0000EF78)
       3'b001: RDOut = A[1] ? {{16{RDIn[31]}}, {RDIn[31:16]}}:{{16{RDIn[15]}}, {RDIn[15:0]}};
    
    ```           
-*The variable A contains the last two bits of the address so can be used to determine which byte in the word we want (so for for half-words we used a mux based on the MSB of A to check which multiple of 2 it is eg if A is 1 we would select the top 16 bits of the 32 bit word)*
+*The variable **A** contains the last two bits of the address so can be used to determine which byte in the word we want (so for for half-words we used a mux based on the MSB of A to check which multiple of 2 it is eg if A is 1 we would select the top 16 bits of the 32 bit word)*
+
 ALso the design choice to use a ternary operator (mux) as opposed to another case statement is just to reduce lines *although on reflection it may be clearer to read if multiplexers are used to keep consistency with the rest of the module*
 
 ## Store https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/StoreMemory.sv
