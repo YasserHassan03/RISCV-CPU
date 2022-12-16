@@ -83,6 +83,8 @@ Due to the nature of the project being interconnected and the willingness and ea
 |DecExeff         |  *           |                |            |         |
 |FetchDecff       |              |                |            |  *      |
 |MemWriteff       |              |                |   *        |         | 
+|F1PL             |  *           |  x             |   x        |   x     |
+|PDFPL            |  x           |   *            |   x        |  x      |   
 
 x =Also helped        * =Principle Contributor
 
