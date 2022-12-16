@@ -2,32 +2,6 @@
 
 Due to the nature of the project being interconnected and the willingness and eagerness of everyone in the group to maximise learning rather than limit ourselves to one part of the cpu, we decided to work together on the majority of the project but have certain people responsible/ in charge for certain aspescts, therefore communication was a major part of our group's dynamic.
 
-| Module          | James        | Yasser         | Kishok     |Ahmad    |
-| :---            |    :----:    |          :---: |:---:       |-----:   |
-| ALUtop.sv       |    x         |    x           | *          |  x      |
-| ControlUnit.sv  |        x     |     x          |  *         |  x      |
-|Memorytop.sv     |         x    |     x          |  *         |  x      |
-|cpu.sv           |          x   |     x          |  *         |  x      |
-|cpu_tb.cpp       |         x    |     x          |  *         |  x      |
-|LoadMemory.sv    |   *          |     x          |  x         |   x     |
-|StoreMemory.sv   |   *          |     x          |  x         |   x     |
-|PCReg.sv         |   *          |      x         |  x         |  x      |
-|PCTop.sv         |   *          |      x         |  x         |  x      |
-|InstrMemory.mem  |   *          |      x         |   x        |  x      |
-|InstrMemory.sv   |   *          |     x          |  x         |  x      |
-|ALU.sv           |         x    |  *             |   x        |  x      |
-|RegisterFile.sv  |         x    |  *             |    x       |  x      |
-|DataMemory.mem   |         x    |  *             |    x       |  x      |
-|DataMemory.sv    |         x    |  *             |    x       |  x      |
-|SignExtend.sv    |  x           |      x         |    x       |  *      |
-|ALUDecode.sv     |  x           |      x         |    x       |  *      |
-|MainDecoder.sv   |  x           |      x         |    x       |  *      |
-|F1SC.s           |  x           |      x         |    x       |  *      |
-|make.sh          |  x           |      x         |    x       |  *      |
-|run.sh           |  x           |      x         |    x       |  *      |
-
-
-x =Also helped        * =Principle Contributor
 
 Who was in charge of what is listed below:
 
@@ -44,6 +18,8 @@ I was mainly in charge of the top level modules and testing, these included the 
 
 -cpu_tb.cpp
 
+-MemWriteff
+
 ### James: 
 I was mainly in charge of PC and memory including the following: 
 
@@ -59,6 +35,10 @@ I was mainly in charge of PC and memory including the following:
 
 -IsntrMemory.sv
 
+-DecExeff
+
+- F1PL.s
+
 ### Yasser: 
 As well as being the main editor on the readme files, I was mainly in charge of the Alu and the readme including: 
  
@@ -69,6 +49,10 @@ As well as being the main editor on the readme files, I was mainly in charge of 
  -DataMemory.mem 
  
  -DataMemory.sv 
+ 
+ -DecExeff 
+ 
+ - PDFPL.s
  
 
 ### Ahmad: 
@@ -85,3 +69,5 @@ I was mainly in charge of the control and sign extend unit as well as the F1 mac
 -make.sh
 
 -run.sh
+
+- FetchDecff
