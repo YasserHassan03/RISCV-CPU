@@ -113,6 +113,7 @@ For example say s3 holds the value 0x12345678 "sh s3, 0x8" would put the value 0
       2'b01: WDOut = A[1] ? {{WDIn[15:0]}, RDIn[15:0]} : {{RDIn[31:16]}, {WDIn[15:0]}};
 ```
 *this works in a very similar way to the read block with A denoting which multiple of 2 address we want*
+
 Similarly for byte addressing "sb s3, 0x7" would put the value 0x01782842 into word 2 (overwriting the second-most significant byte or address 0x7)
 ``` verilog
 case (Type)
@@ -126,6 +127,7 @@ case (Type)
       endcase
 ```
 *using cases for which byte in the word we want to change*
+
 All of the above operations are performed by concatenating the existing word in the RAM with the desired byte/half-word that we want to write. Of course the word addressed data is read as normal (using multiples of 4 addresses).
 
 
