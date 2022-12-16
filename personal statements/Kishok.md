@@ -51,6 +51,14 @@ DataMemory DM (
     .A  ({{ALUResult[31:2]}, {2'b00}}),
 ```
 
+Finally, we added a MUX to determine the Result output, which can either be the output of the ALU (```ALUResult```) or the data that is read from memory (```Data```).
+
+### Single Cycle Data -> Result MUX
+
+```sv 
+assign Result = ResultSrc ? Data : ALUResult;
+```
+
 ## CPU Top Level Design
 
 The overall top level design of the RISC-V CPU is comprised of the following modules: PC Top, Instruction Memory, Control Unit, Sign Extend and ALU Top, Memory Top. The appropriate wires to connect these modules have been created and utilised. This facilitated by the grouping of smaller related components to produce larger, simpler modules to reduce complexity. 
@@ -77,13 +85,10 @@ vbdBar(cpu->a0);
 vbdCycle(simcyc);
 ```
 
-
-```VbdSetMode(1)``` is used to 
-
-## Testing
+```VbdSetMode(1)``` is used so that the trigger input is automatically toggled low after it has been read as high.
 
 ## Reflections
-
+Overall, I am satisfied with the results of this project. Tasks were well delegated and our team were able to communicate with each other and as a result we joined our various backgrounds and expertise to tackle individual issues we stumbled upon as well as cover for areas in which we lacked. While we may not have been able to implement cache or the other extensions, I feel that the demands of this project provided me with the push I needed to prompt a more enriched understanding of the RISC-V architecture and how certain improvements can be made to improve efficiency in practice (i.e. pipelining, cache, etc). Had there been more time, I would have liked to have played around with git commands more so that I'm more confident managing code with collaborative projects such as this one as opposed to my fairly surface level understanding at the time of writing this.
 ## 
 
 
