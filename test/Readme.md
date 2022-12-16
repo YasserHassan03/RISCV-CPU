@@ -63,7 +63,10 @@ The guassian function had a PDF that looked very similar to a normal distributio
 Our display on the vbuddy was as follows:
 
 
-https://user-images.githubusercontent.com/116260803/208069568-d8e3182b-54d5-42fa-a0db-0077772770f2.MOV
+https://user-images.githubusercontent.com/116262930/208152853-1935939e-ce3b-4555-b8db-21cb84f4233c.mp4
+
+
+
 
 Once more, the video cuts at the start of the second cycle but we can clearly see that it matches the photo.
 
