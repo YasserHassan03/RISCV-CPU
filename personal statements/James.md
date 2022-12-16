@@ -10,6 +10,7 @@ Overall the program counter was fairly simple to make using the diagram from the
 multiplexer for the JALR instruction. 
 
 The original program counter was capable of performing branch and plain jump (JAL) instructions as these require the next program counter value to be equal to the PC + 4. (It is +4 due to RISCV architecture having byte addressable memory and 32 bit word instruction consists of 4 bytes)
+
 ![alt text](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/pcold.png)
 
 In order to implement the additional indirect jump instruction (Jump and Link register or JALR) we need to be able to obtain the next PC value by adding the 12-bit signed I-immediate to the register rs1. We did this by adding an extra multiplexer with an input from the result of the ALU (this carries the value of the imm12 + rs1).
