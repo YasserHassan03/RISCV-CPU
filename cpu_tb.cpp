@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include "vbuddy.cpp"    
-#define MAX_SIM_CYC 10000000
+#define MAX_SIM_CYC 100000000
 
 int main(int argc, char **argv, char **env) {
   int simcyc;     // Simulation Cycle 
@@ -41,10 +41,9 @@ int main(int argc, char **argv, char **env) {
       cpu->eval ();
     }
 
-    /* START PDF */
-    if (simcyc == 338500) std::cout << "PDF Loaded to RAM successfully\n";
-    // if (cpu->a0 != 0) std::cout << simcyc;
-    if (simcyc>339350 && simcyc% 9 == 0) {
+    /* START PDF //
+    if (simcyc == 1500000) std::cout << "PDF Loaded to RAM successfully\n";
+    if (simcyc>1500000 && simcyc% 9 == 0) {
       vbdPlot(cpu->a0,0,255);
     } 
     /* END PDF */
