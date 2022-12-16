@@ -65,6 +65,8 @@ For pipelining I wrote the Exemem.ff file to comply with the following:
 
 <img width="451" alt="Screenshot 2022-12-16 at 11 32 59" src="https://user-images.githubusercontent.com/116260803/208089347-57087103-6b8d-4ef5-9ab0-6438137ce71e.png">
 
+Having all the inputs come seen as inputs to the flip flop and then on the rising clock edge, they all become the outputs seen in the diagram
+
 We stored all the inputs and then 'held' them in the flipflop for one cycle, then 'release' them. The hardest part of the pipelining was rewiring the components so that they complied with the registers.
 
 ### Changes to rest of files
@@ -76,6 +78,8 @@ We removed ALU top because, initially as can be seen [here](https://github.com/E
 I was also a lead in adding nops to the pdf assmebly file to allow our pipeline program to be tested.
 
 We added nops for two reasons: data hazards and control hazards. We had Control hazards whenever we did a branch or a jump, so we always added two nops straight after to ensure that jump/branch had enough time to reach the PCsrc logic and return to PC counter before another instruction is read in. Whereas Data hazards appeared whenever we tried accessing/fetching from a register which hadn't finished it's write cycle yet. 
+
+Initially, there was confusion about number of nops and I missed out a few of them but on going through it again, these were all fixed.
 
 ## Reflection
 
