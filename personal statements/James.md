@@ -1,10 +1,9 @@
 # Introduction
 The sections which I was responsible for was the program counter and the RAM load/store modules.
 
-However, due to the highly interconnected nature of the project with the need for inputs and outputs in my module being from other sections like (ALU, Control etc),
-I often collaborated with other members of the team to ensure that the naming of wires etc was standard and that the modules would interct with each other in the required way.
+However, due to the highly interconnected nature of the project with the need for inputs and outputs in my module being from other sections like (ALU, Control etc), I often collaborated with other members of the team to ensure that the naming of wires etc was standard and that the modules would interct with each other in the required way.
 
-# Program Counter
+# [Program Counter](b32b3fddf4aad91a5fe431548dc000da9c4b4f72)
 
 Overall the program counter was fairly simple to make using the diagram from the lectures and the only difference between the program counter from LAB 4 was an additional 
 multiplexer for the JALR instruction. 
@@ -26,7 +25,7 @@ always_comb begin
   ```
 *here the first mux is the original with the value PCinterm being fed into the additional mux which takes the result from the ALU as a second input*
 
-The additional mux is controlled by a select called JumpReg which comes from the control logic and determines if a JALR is required. 
+The additional mux is controlled by a select called JumpReg which comes from the control logic and determines if a JALR is required (JALR would need Result to be assigned to PCNext, Jumps and Branches need PCTarget to be assigned as next PC, normal isntructions would need PCPlus4). 
 
 Deciding on this design choice required collaboration with the control unit and ALU.
 
@@ -85,10 +84,10 @@ endmodule
 
 Note: We concatenate with the largest byte address within the multiple of 4 being the most significant and the lowest being the least because RISC-V is little-endian.
 
-# Memory Read/Write blocks
+# [Memory Read/Write blocks](5f27759820d96d0592d9490b78e0ef718877016f)
 
 Because the memory in a RISC-V processor is byte-addressable we need some additional logic to be able to load/store bytes or halfwords or words for instructions such as lb/sb , lh/sh, lw/sw and lbu/lhu (more on these later).
-In order to perform the above operations we need to output or input a 32 bit data values which is formed from the relevant bits extracted from the memory. Another key distinction for these blocks is that RISC-V memory is little endian. 
+In order to perform the above operations we need to output or input a 32 bit data values which is formed from the relevant bits extracted from the memory. Another key distinction for these blocks is that RISC-V memory is [little endian](3dab1128857fcf610456673179bf41b453f7ae6b). 
 Note: After collaboration with the control logic we decided that a 3 bit control signal *Type* would be used to determine the type of addressing mode. The table below documents the control code standards we used.
 
 | Type[3:0] | Addressing mode    |
@@ -102,7 +101,7 @@ Note: After collaboration with the control logic we decided that a 3 bit control
 | 111       | N/A                |
 
 
-## Load https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/LoadMemory.sv
+## [Load](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/LoadMemory.sv)
 
 ![alt text](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/datamem.png)
 *Using slide 12 from lecture 6 for below examples*
@@ -147,7 +146,7 @@ lhu s3, 0x2 would result in s3 holding 0x0000EF78)
 
 ALso the design choice to use a ternary operator (mux) as opposed to another case statement is just to reduce lines *although on reflection it may be clearer to read if multiplexers are used to keep consistency with the rest of the module*
 
-## Store https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/StoreMemory.sv
+## [Store](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/StoreMemory.sv)
 
 The store memory block is very similar to the above load memory block however there is no need for a unsigned operation because the data is not being extracted from memory rather written to so we only want to overwrite the bytes/half-words we want to change (we don't need to extend the data to 32 bits rather only select the relevant bytes)
 For example say s3 holds the value 0x12345678 "sh s3, 0x8" would put the value 0x56782842 into word 2 (overwriting the top half-word with the 16 LSBs of the data in we don't have an instruction to choose the 16 MSBs because this could be achieved by performing a shift operation and this is "**Reduced Instruction Set** Computing")
@@ -173,7 +172,7 @@ case (Type)
 
 All of the above operations are performed by concatenating the existing word in the RAM with the desired byte/half-word that we want to write. Of course the word addressed data is read as normal (using multiples of 4 addresses).
 
-# Pipelining
+# [Pipelining](90e321e6e3a837e361f548b3f2ff3378f6236c6c)
 In order to implement pipelining we needed to insert registers between each of the five Fetch, Decode, Execute, Memory and Writeback stages. I added the register between the Decode and Execute stages. I also made sure that the register file was changed to be written on the NEGEDGE of CLK so that DATA can be written in the first half (rising edge) of the clock cycle and be written back for any following instruction in the second half (falling edge) of the clock cycle. 
 Other than this it was simply a matter of identifying signals which leave the Decode section and enter the Execute stage. 
 ```Verilog
@@ -248,12 +247,12 @@ One other change for the pipelined version of the PC module was moving the PCTar
 // PCTarget Logic
   assign PCTargetE = ImmExtE + PCE;
   ```
-*PCTargetE is assigned to the value of the ImmExtE plus PCE used for JAL and Branch instructions (we could have put this inside the PC using an input as before but we moved it outside for clarity)*
+*PCTargetE is assigned to the value of the ImmExtE plus PCE used for JAL and Branch instructions (we could have put this inside the PC using an input as before but we moved it [outside](0451370fa410d4f4874bc9eaaca7267bf25a280e) for clarity*
 
 # F1 Program pipelining
 
 Initially we had the idea of storing random values in the RAM and then using the time taken to press the trigger to choose a value for the F1 lights delay for the best "Randomness" however after discussing this in more detail we decided that this was not very practical and instead agreed on using the primitive polynomial method used in lab 3. 
-[Ahmad](https://github.com/ahumayde) wrote the F1 lights assembly program and explains how it woks in more detail in his personal statement. I adapted the program and made it suitable for our pipelined CPU design by identifying data/control hazards and inserting *NOP* instructions to delay the operation until the data had been written to register file or control signal had reached the [relevant stage](ec3e00c44f53d1de0ac4a8dcc1d416debbf79514).
+[Ahmad](https://github.com/ahumayde) wrote the F1 lights assembly program and explains how it woks in more detail in his personal statement. I [adapted](850926068f04a58656f76d114301d1276a7c1742) the program and made it suitable for our pipelined CPU design by identifying data/control hazards and inserting *NOP* instructions to delay the operation until the data had been written to register file or control signal had reached the [relevant stage](ec3e00c44f53d1de0ac4a8dcc1d416debbf79514).
 
 ```Assembly
 default:
