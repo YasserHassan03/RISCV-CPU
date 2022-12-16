@@ -49,7 +49,7 @@ module PCReg #(
 
 endmodule
 ```
-
+![alt text](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/memory%20map.png)
 
 
 
