@@ -60,6 +60,7 @@ In data memory all we do is specify which file we are reading from and then put 
 ## pipelining
 
 ### ExeMem flip flop
+
 For pipelining I wrote the Exemem.ff file to comply with the following:
 
 <img width="451" alt="Screenshot 2022-12-16 at 11 32 59" src="https://user-images.githubusercontent.com/116260803/208089347-57087103-6b8d-4ef5-9ab0-6438137ce71e.png">
@@ -68,10 +69,12 @@ We stored all the inputs and then 'held' them in the flipflop for one cycle, the
 
 ### Changes to rest of files
 
-We removed ALU top because, initially as can be seen [here](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/90622539232c0311c49b4e08d6f7cfbe4f5b52fd#diff-2f3497d1fa6d969dbae329e73929aad83199e038fa02e4ad263cd3e78c84be7b) we had alu and register file in ALUtop. However when we pipelined, we had to sepereate register file and ALU module ad they were seperated by the decode-execute register. So we therefore deleted the file and placed them both in PC top. We also changed the register file to write on negedge rather than posedge so that the instruction after the write doesnt have to wait an extra cycle thus removing an extra nop.
+We removed ALU top because, initially as can be seen [here](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/90622539232c0311c49b4e08d6f7cfbe4f5b52fd#diff-2f3497d1fa6d969dbae329e73929aad83199e038fa02e4ad263cd3e78c84be7b) we had alu and register file in ALUtop. However when we pipelined, we had to sepereate register file and ALU module ad they were seperated by the decode-execute register. So we therefore deleted the file and placed them both in [PC top](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/5e083d5af25077a57f939ea142b8b65c45ea07a3). We also changed the register file to write on negedge rather than posedge so that the instruction after the write doesnt have to wait an extra cycle thus removing an extra nop.
 
 ### Adding Nops to pdf file
 
-I was also 
+I was also a lead in adding nops to the pdf assmebly file to allow our pipeline program to be tested.
+
+We added nops for two reasons: data hazards and control hazards. We had Control hazards whenever we did a branch or a jump, so we always added two nops straight after to ensure that jump/branch had enough time to reach the PCsrc logic and return to PC counter before another instruction is read in. Whereas Data hazards appeared whenever we tried accessing/fetching from a register which hadn't finished it's write cycle yet. 
 
 ## Reflection
