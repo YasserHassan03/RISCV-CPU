@@ -32,7 +32,7 @@ Deciding on this design choice required collaboration with the control unit and 
 
 ## PC Register 
 
-Inside the Program counter there is also a register which is used to make the program memory asynchronous.
+Inside the Program counter there is also a register which is used to store the next program counter value.
 This was already implemented from lab4 however required some minor adjustments in order to fit with the recommended memory map. The first address is set to 0xBFC00000 for the instruction memory.
 ```verilog
 module PCReg #(
@@ -54,6 +54,36 @@ endmodule
 ![alt text](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/memory%20map.png)
 
 ## Instruction memory
+
+The instruction memory is loaded with hex instructions. It is also byte addressed (which explains why PC generally counts up in 4s to address the next 32 bit instruction word). Again this only required minor changes from lab4 to suit the memory map. We implemented this memory as a ROM with 4096 byte adresses (or 1024 32bit word addresses)
+
+```Verilog
+module InstrMemory #(
+    parameter A_WIDTH = 32,
+    D_WIDTH = 8
+) (
+    input  logic [  A_WIDTH-1:0] A,
+    output logic [4*D_WIDTH-1:0] RD
+);
+
+  // ROM Array
+  logic [D_WIDTH-1:0] ROM[32'hbfc00fff:32'hbfc00000];
+
+  // Load ROM from mem file
+  initial begin
+    $display("Loading ROM");
+    $readmemh("./test/Memory/pdfPipelined.mem", ROM);
+    $display("Instructions written to ROM successfully");
+  end
+
+  // Assign Output
+  assign RD = {{ROM[A+3]}, {ROM[A+2]}, {ROM[A+1]}, {ROM[A]}};
+
+endmodule
+```
+*the above code loads our pipelined version of the sample pdf assembly*
+
+Note: We concatenate with the largest byte address within the multiple of 4 being the most significant and the lowest being the least because RISC-V is little-endian.
 
 # Memory Read/Write blocks
 
@@ -131,6 +161,9 @@ case (Type)
 
 All of the above operations are performed by concatenating the existing word in the RAM with the desired byte/half-word that we want to write. Of course the word addressed data is read as normal (using multiples of 4 addresses).
 
+# Pipelining
+In order to implement pipelining we needed to insert registers between each of the five Fetch, Decode, Execute, Memory and Writeback stages. I added the register between the Decode and Execute stages. I also made sure that the register file was changed to be written on the NEGEDGE of CLK so that DATA can be written in the first half (rising edge) of the clock cycle and be written back for any following instruction in the second half (falling edge) of the clock cycle. 
+Other than this it was simply a matter of identifying signals which leave the Decode section and enter the Execute stage. 
 
 
 
