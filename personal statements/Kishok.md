@@ -89,7 +89,51 @@ vbdCycle(simcyc);
 
 ## Pipelining
 
-During pipelining we worked as a team to modify and redesign the pipelined schematic provided to us in lectures. This was necessary as the schematic provided was incomplete and so we had to analyse the schematic and compare it against the requirements to pipeline the CPU, like adding registers to each stage, and adding/extending signals so they can be saved for the next stage to use after completing the previous instruction. An important modification that was made was the dismantling of ```ALUTop.sv``` into its individual components (register file, ALU and data memory).   
+During pipelining we worked as a team to modify and redesign the pipelined schematic provided to us in lectures. This was necessary as the schematic provided was incomplete and so we had to analyse the schematic and compare it against the requirements to pipeline the CPU, like adding registers to each stage, and adding/extending signals so they can be saved for the next stage to use after completing the previous instruction. An important modification that was made was the dismantling of ```ALUTop.sv``` into its individual components (register file, ALU and data memory).
+
+### ALUtop Dismantling
+
+#### Decode Stage
+
+```sv
+// Register File Module
+RegisterFile RF (
+    .CLK(CLK),
+    .trigger(trigger),
+    .WE3(RegWriteW),
+    .A1 (InstrD[19:15]),
+    .A2 (InstrD[24:20]),
+    .A3 (RdW),
+    .WD3(ResultW),
+    .RD1(RD1Din),
+    .RD2(RD2D),
+    .a0 (a0)
+);
+
+// RD1D MUX 
+assign RD1D = RD1SrcD ? PCD : RD1Din; 
+```
+
+#### Execute Stage
+```sv
+// SrcB MUX
+assign SrcBE = ALUSrcE ? ImmExtE : RD2E;
+
+// ALU Module
+ALU ALU (
+    .ALUControl(ALUControlE),
+    .SrcA(RD1E),
+    .SrcB(SrcBE),
+    .ALUResult(ALUResultE),
+    .Zero(ZeroE)
+);
+
+// PCSrc Logic
+assign PCSrcE = (BranchE & (funct3MSBE ^ (funct3LSBE ^ ZeroE))) || JumpE;
+
+// PCTarget Logic
+assign PCTargetE = ImmExtE + PCE;
+```
 
 ## Updated Pipeline Schematic
 <img height="400" src="https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/PipelineUpdatedSchematic.png">
