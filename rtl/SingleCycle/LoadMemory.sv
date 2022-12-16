@@ -30,7 +30,7 @@ module LoadMemory (
       // Unsigned Half
       3'b101: RDOut = A[1] ? {{RDIn[31:16]}, {16{1'b0}}} : {{16{1'b0}}, {RDIn[15:0]}};
       // Signed Half
-      3'b001: RDOut = A[1] ? {{16{RDIn[31]}}, {RDIn[31:16]}}:{{16{RDIn[15]}}, {RDIn[15:0]}};
+      3'b111: RDOut = A[1] ? {{16{RDIn[31]}}, {RDIn[31:16]}}:{{16{RDIn[15]}}, {RDIn[15:0]}};
       // Default
       default: RDOut = RDIn;
     endcase
