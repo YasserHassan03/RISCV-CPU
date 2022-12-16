@@ -1,6 +1,6 @@
 ## Introduction:
 
-I was mainly in charge of the ALU section of the CPU in both the pipeline and single-cycle versions as well as the data memory .sv file and the register file. I was also mainly responsible for writing up the readme section in the testing folder where we describe how we know if our tests work.
+I was mainly in charge of the ALU section of the CPU in both the pipeline and single-cycle versions as well as the data memory.sv file and the register file. I was also mainly responsible for writing up the readme section in the testing folder where we describe how we know if our tests work.
 However due to the interconnected nature of the project and the whole groups willingness to work together and maximise our learning of the whole cpu and the designing process I collaborated with other people on the parts they were main contributor for as well as others contributing to what I was principle contributor to.
 
 ## ALU 
@@ -39,6 +39,24 @@ The register file is a clocked multi-port array which is used to load/store valu
 
 Finally the top level ALU module also includes additional multiplexers which can enable additional instructions. The mux for ImmRes chooses the sign extended value when ImmUppSrc is high (this would be the case for LUI instructions) and bypasses the ALU. Otherwise the result is read from the ALU as normal. THe WD3 mux takes in PC+4 and ImmRes with jump as the select. If jump is high then the Write Data is PC+4 as this needs to be stored in the register for JAL or JLR instructions (as a sort of return address) otherwise the write data remains as normal. The SrcA mux enables the upper immediate to be added to the program counter which is an AUIP instruction. This happens if the PCUppSrc select is high. The SrcB mux decides if the input to the ALU comes from the register or the immediate operand. So the select ALUSrc is used to distinguish between register or immediate operations.
 
-The main challenge in the ALU section was to find a way to deal with set less than instructions which had issues regarding diffrentiating between the signed and unsigned value. Originally, we used logic to calculate signed less than using top bits from both inputs and the unsigned less than operator seen in this [comit](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/d7b0411ff0c59daaed8e4f09404eff5eb6a275b0)
+The main challenge in the ALU section was to find a way to deal with set less than instructions which had issues regarding diffrentiating between the signed and unsigned value. Originally, we used logic to calculate signed less than using top bits from both inputs and the unsigned less than operator seen in this [comit](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/d7b0411ff0c59daaed8e4f09404eff5eb6a275b0). We fixed this and made it a lot easier, by casting 2 inputs as signed numbers using `signed'` as can be seen [here](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/bbfd51d27f4858567424f68525cc031a3dfeb6af)
 
 ## Register file
+
+Initially when writing the the register file, we would just check if the write enable was 1and then write to a3 our write address :
+
+``` verilog
+ if (WE3) REG_FILE[A3] <= WD3;
+```
+However while testing , we ran into trouble especially with a ret instruction which would end up writing to our zero register. To fix this, we quite simply decided to check that both the write enable is one and that the register we are writing to is not a zero register. This was done as follows:
+
+```verilog
+ if (WE3 & A3 != 0) REG_FILE[A3] <= WD3;
+```
+## Data memory
+
+In data memory all we do is specify which file we are reading from and then put each byte from the instruction word into a specific pasrt of the write address. We had to make sure when testing that we start writing memory at the desired address specified by the memory map. Initially as can be seen in this [commit](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/560159f1c84dba04be77ff66af514d4028afd2f9#diff-09e7f6ae93159d1711a1d00f971f66a606e56e2357adf7d03bf1256bad402695) we had it in big endian. However, due to the reference program being in little endian, we had to change the file to comply like [this](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/395c80ac38ef29dd77dce1344d4ac235b984049a)
+
+## pipelining
+
+Once more for pipelining the group worked together on almost everything. I was mainly repsonsible for 
