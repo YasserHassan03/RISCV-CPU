@@ -81,6 +81,15 @@ We added nops for two reasons: data hazards and control hazards. We had Control 
 
 Initially, there was confusion about number of nops and I missed out a few of them but on going through it again, these were all fixed.
 
+### Changing the ALU
+
+Another Issue we encountered was that initially we had PCSRC logic in the write stage of our CPU but after testing and especially  pipleining we thought it would be better to put it in the Execute stage to reduce control hazards. So we added the following line,
+
+```verilog
+ assign PCSrcE = (BranchE & (funct3MSBE ^ (funct3LSBE ^ ZeroE))) || JumpE;
+```
+Kishok talks more about this in his readme.
+
 ## Reflection
 
 Overall I think the group worked very well together in making sure everyone understood everything. Personally I found this project to be a challenging yet succesfull effort which forced me out of my comfort zone, to learn git and helped me understand some parts of the cpu better when I was forced to explain them to others whilst also finding it helpful for people to explain to me some parts I didn't understand as well. It was also very helpful to implement everything we had discussed in lectures in our design as it helped solidfy my learning of the subject.
