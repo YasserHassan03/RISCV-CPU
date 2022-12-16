@@ -144,19 +144,19 @@ lhu s3, 0x2 would result in s3 holding 0x0000EF78)
    ```           
 *The variable **A** contains the last two bits of the address so can be used to determine which byte in the word we want (so for for half-words we used a mux based on the MSB of A to check which multiple of 2 it is eg if A is 1 we would select the top 16 bits of the 32 bit word)*
 
-ALso the design choice to use a ternary operator (mux) as opposed to another case statement is just to reduce lines *although on reflection it may be clearer to read if multiplexers are used to keep consistency with the rest of the module*
+Also the design choice to use a ternary operator (mux) as opposed to another case statement is just to reduce lines *although on reflection it may be clearer to read if multiplexers are used to keep consistency with the rest of the module*
 
 ## [Store](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/StoreMemory.sv)
 
 The store memory block is very similar to the above load memory block however there is no need for a unsigned operation because the data is not being extracted from memory rather written to so we only want to overwrite the bytes/half-words we want to change (we don't need to extend the data to 32 bits rather only select the relevant bytes)
-For example say s3 holds the value 0x12345678 "sh s3, 0x8" would put the value 0x56782842 into word 2 (overwriting the top half-word with the 16 LSBs of the data in we don't have an instruction to choose the 16 MSBs because this could be achieved by performing a shift operation and this is "**Reduced Instruction Set** Computing")
+For example say s3 holds the value 0x12345678 `sh s3, 0x8` would put the value 0x56782842 into word 2 (overwriting the top half-word with the 16 LSBs of the data in we don't have an instruction to choose the 16 MSBs because this could be achieved by performing a shift operation and this is "**Reduced Instruction Set** Computing")
 ```verilog
 // Half
       2'b01: WDOut = A[1] ? {{WDIn[15:0]}, RDIn[15:0]} : {{RDIn[31:16]}, {WDIn[15:0]}};
 ```
 *this works in a very similar way to the read block with A denoting which multiple of 2 address we want*
 
-Similarly for byte addressing "sb s3, 0x7" would put the value 0x01782842 into word 2 (overwriting the second-most significant byte or address 0x7)
+Similarly for byte addressing `sb s3, 0x7` would put the value 0x01782842 into word 2 (overwriting the second-most significant byte or address 0x7)
 ``` verilog
 case (Type)
       // Byte
