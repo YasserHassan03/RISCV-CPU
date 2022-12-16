@@ -16,6 +16,13 @@ As expected, the F1 lights program works and we can clearly see the random delay
 
 ## Single-cycle CPU Reference Program testing
 
+In testing we used the following line in the cpp file to sample the wave:
+
+``` cpp
+   if (simcyc>1000000 && simcyc% 9 == 0)
+```
+This allows us to view it in periods rather than a continuous wave thus decreaseing the wavelength and making the graph more readable
+
 To test the reference program, we had to specify, in accordance to the data map provided in the reference program repo, where we start writing to, we did this in the following way:
 ``` verilog
   $readmemh("DataMemory.mem", RAM, 32'h10000);
@@ -75,3 +82,5 @@ https://user-images.githubusercontent.com/116260803/208072385-2f514729-b3ab-464a
 This is the same as expected.
 
 All these tests confirm that our single-cycle cpu works with both the reference program as well as the F1 lights program as expected.
+
+The exact same output was seen when we ran with pipelining
