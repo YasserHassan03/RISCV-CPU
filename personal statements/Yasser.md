@@ -1,6 +1,6 @@
 ## Introduction:
 
-I was mainly in charge of the ALU section of the CPU in both the pipeline and single-cycle versions. I was also mainly responsible for writing up the readme section in the testing folder where we describe how we know if our tests work.
+I was mainly in charge of the ALU section of the CPU in both the pipeline and single-cycle versions as well as the data memory .sv file and the register file. I was also mainly responsible for writing up the readme section in the testing folder where we describe how we know if our tests work.
 However due to the interconnected nature of the project and the whole groups willingness to work together and maximise our learning of the whole cpu and the designing process I collaborated with other people on the parts they were main contributor for as well as others contributing to what I was principle contributor to.
 
 ## ALU 
@@ -39,4 +39,6 @@ The register file is a clocked multi-port array which is used to load/store valu
 
 Finally the top level ALU module also includes additional multiplexers which can enable additional instructions. The mux for ImmRes chooses the sign extended value when ImmUppSrc is high (this would be the case for LUI instructions) and bypasses the ALU. Otherwise the result is read from the ALU as normal. THe WD3 mux takes in PC+4 and ImmRes with jump as the select. If jump is high then the Write Data is PC+4 as this needs to be stored in the register for JAL or JLR instructions (as a sort of return address) otherwise the write data remains as normal. The SrcA mux enables the upper immediate to be added to the program counter which is an AUIP instruction. This happens if the PCUppSrc select is high. The SrcB mux decides if the input to the ALU comes from the register or the immediate operand. So the select ALUSrc is used to distinguish between register or immediate operations.
 
-The main challenge in the ALU section was to find a way to be able to distinguish between the RISCV instructions and implement logic to cause the ALU to behave accordingly. This was solved by 
+The main challenge in the ALU section was to find a way to deal with set less than instructions which had issues regarding diffrentiating between the signed and unsigned value. Originally, we used logic to calculate signed less than using top bits from both inputs and the unsigned less than operator seen in this [comit](github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/d7b0411ff0c59daaed8e4f09404eff5eb6a275b0)
+
+## Register file
