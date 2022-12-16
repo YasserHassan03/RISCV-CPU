@@ -90,7 +90,7 @@ Because the memory in a RISC-V processor is byte-addressable we need some additi
 In order to perform the above operations we need to output or input a 32 bit data values which is formed from the relevant bits extracted from the memory. Another key distinction for these blocks is that RISC-V memory is [little endian](3dab1128857fcf610456673179bf41b453f7ae6b). 
 Note: After collaboration with the control logic we decided that a 3 bit control signal *Type* would be used to determine the type of addressing mode. The table below documents the control code standards we used.
 
-| Type[3:0] | Addressing mode    |
+| `Type[3:0]`| Addressing mode    |
 |-----------|--------------------|
 | 000       | signed byte        |
 | 001       | signed half-word   |
@@ -106,7 +106,7 @@ Note: After collaboration with the control logic we decided that a 3 bit control
 ![alt text](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/personal%20statements/images/datamem.png)
 *Using slide 12 from lecture 6 for below examples*
 
-so for example if we wanted to load the 4th byte (MSB) of the word we would use an instruction like lb s3, 0x3
+so for example if we wanted to load the 4th byte (MSB) of the word we would use an instruction like `lb s3, 0x3`
 this would result in register s3 holding the value 0xFFFFFFAB (because lb is a signed operation and the MSB of AB is 0b1 it is assumed to be negative thus we extend keeping this sign)
 ``` verilog
 case (Type)
@@ -122,7 +122,7 @@ case (Type)
 ```
 *note the variable **Type** is from an input from control and determines the type of addressing required for the instruction executed*
 
-on the other hand if we wanted to do an unsigned operation we would use lbu s3, 0x3 which would result in register s3 holding 0x000000AB (where we do an unsigned extension)
+on the other hand if we wanted to do an unsigned operation we would use `lbu s3, 0x3` which would result in register `s3` holding `0x000000AB` (where we do an unsigned extension)
 ``` verilog
 // Unsigned Byte
       3'b100:
@@ -133,8 +133,8 @@ on the other hand if we wanted to do an unsigned operation we would use lbu s3, 
         2'b11: RDOut = {{24{1'b0}}, {RDIn[31:24]}};
       endcase
 ```
-Half word addressing would work in a similar way however would have addresses which increment in steps of 2. (eg lh s3, 0x2 would result in s3 holding 0xFFFFEF78 or 
-lhu s3, 0x2 would result in s3 holding 0x0000EF78)
+Half word addressing would work in a similar way however would have addresses which increment in steps of 2. (eg `lh s3, 0x2` would result in s3 holding `0xFFFFEF78` or 
+`lhu s3, 0x2` would result in `s3` holding `0x0000EF78`)
 ```verilog
 // Unsigned Half
       3'b101: RDOut = A[1] ? {{RDIn[31:16]}, {16{1'b0}}} : {{16{1'b0}}, {RDIn[15:0]}};
@@ -148,15 +148,17 @@ Also the design choice to use a ternary operator (mux) as opposed to another cas
 
 ## [Store](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/StoreMemory.sv)
 
+[*Using example from slide 12 lecture 6 again*](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/blob/main/rtl/Latest/LoadMemory.sv)
+
 The store memory block is very similar to the above load memory block however there is no need for a unsigned operation because the data is not being extracted from memory rather written to so we only want to overwrite the bytes/half-words we want to change (we don't need to extend the data to 32 bits rather only select the relevant bytes)
-For example say s3 holds the value 0x12345678 `sh s3, 0x8` would put the value 0x56782842 into word 2 (overwriting the top half-word with the 16 LSBs of the data in we don't have an instruction to choose the 16 MSBs because this could be achieved by performing a shift operation and this is "**Reduced Instruction Set** Computing")
+For example say `s3` holds the value `0x12345678` `sh s3, 0x8` would put the value `0x56782842` into word 2 (overwriting the top half-word with the 16 LSBs of the data in we don't have an instruction to choose the 16 MSBs because this could be achieved by performing a shift operation and this is "**Reduced Instruction Set** Computing")
 ```verilog
 // Half
       2'b01: WDOut = A[1] ? {{WDIn[15:0]}, RDIn[15:0]} : {{RDIn[31:16]}, {WDIn[15:0]}};
 ```
 *this works in a very similar way to the read block with A denoting which multiple of 2 address we want*
 
-Similarly for byte addressing `sb s3, 0x7` would put the value 0x01782842 into word 2 (overwriting the second-most significant byte or address 0x7)
+Similarly for byte addressing `sb s3, 0x7` would put the value `0x01782842` into word 2 (overwriting the second-most significant byte or address 0x7)
 ``` verilog
 case (Type)
       // Byte
