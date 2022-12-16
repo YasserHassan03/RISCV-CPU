@@ -23,7 +23,7 @@ module Memorytop (
 
   // Data Memory Module
   DataMemory DM (
-      .A  ({{ALUResult[27:2]}, {2'b00}}),
+      .A  ({{ALUResult[31:2]}, {2'b00}}),
       .WD (WriteData),
       .WE (MemWrite),
       .RD (ReadData),
