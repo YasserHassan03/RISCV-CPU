@@ -65,6 +65,13 @@ On the rising edge, we also make t0 high when trigger is high. This is done to m
 
 In data memory all we do is specify which file we are reading from and then put each byte from the instruction word into a specific pasrt of the write address. We had to make sure when testing that we start writing memory at the desired address specified by the memory map. Initially as can be seen in this [commit](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/560159f1c84dba04be77ff66af514d4028afd2f9#diff-09e7f6ae93159d1711a1d00f971f66a606e56e2357adf7d03bf1256bad402695) we had it in big endian. However, due to the reference program being in little endian, we had to change the file to comply like [this](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/395c80ac38ef29dd77dce1344d4ac235b984049a)
 
+We assigned the output Read data as a concatenation of bytes to form an instruction word using little endian form.
+
+```verilog
+  assign RD = {RAM[A+3], RAM[A+2], RAM[A+1], RAM[A]};
+```
+
+
 ## pipelining
 
 ### ExeMem flip flop
@@ -77,17 +84,25 @@ Having all the inputs come seen as inputs to the flip flop and then on the risin
 
 We stored all the inputs and then 'held' them in the flipflop for one cycle, then 'release' them. The hardest part of the pipelining was rewiring the components so that they complied with the registers.
 
+Here is an example of what we do on the rising edge:
+
+```verilog
+    RegWriteM <= RegWriteE;
+    ResultSrcM <= ResultSrcE;
+```
+The Memory signals become the Execute signals on the rising clock edge.
+
 ### Changes to rest of files
 
-We removed ALU top because, initially as can be seen [here](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/90622539232c0311c49b4e08d6f7cfbe4f5b52fd#diff-2f3497d1fa6d969dbae329e73929aad83199e038fa02e4ad263cd3e78c84be7b) we had alu and register file in ALUtop. However when we pipelined, we had to sepereate register file and ALU module ad they were seperated by the decode-execute register. So we therefore deleted the file and placed them both in [PC top](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/5e083d5af25077a57f939ea142b8b65c45ea07a3). We also changed the register file to write on negedge rather than posedge so that the instruction after the write doesnt have to wait an extra cycle thus removing an extra nop.
+We removed ALU top because, initially as can be seen [here](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/90622539232c0311c49b4e08d6f7cfbe4f5b52fd#diff-2f3497d1fa6d969dbae329e73929aad83199e038fa02e4ad263cd3e78c84be7b) we had alu and register file in ALUtop. However when we pipelined, we had to sepereate register file and ALU module ad they were seperated by the decode-execute register as can be seen in the image above. So we therefore deleted the file and placed them both in [PC top](https://github.com/EIE2-IAC-Labs/iac-riscv-cw-32/commit/5e083d5af25077a57f939ea142b8b65c45ea07a3). We also changed the register file to write on negedge rather than posedge so that the instruction after the write section doesn't have to wait an extra cycle thus removing an extra nop that would have been required had we kept writing on rising edge.
 
 ### Adding Nops to pdf file
 
 I was also a lead in adding nops to the pdf assmebly file to allow our pipeline program to be tested.
 
-We added nops for two reasons: data hazards and control hazards. We had Control hazards whenever we did a branch or a jump, so we always added two nops straight after to ensure that jump/branch had enough time to reach the PCsrc logic and return to PC counter before another instruction is read in. Whereas Data hazards appeared whenever we tried accessing/fetching from a register which hadn't finished it's write cycle yet. 
+We added nops for two reasons: data hazards and control hazards. We had Control hazards whenever we did a branch or a jump, so we always added two nops straight after to ensure that jump/branch had enough time to reach the PCsrc logic and return to PC counter before another instruction is read in. Whereas Data hazards appeared whenever we tried accessing/fetching from a register which hadn't finished it's write cycle yet. These also required us to implement two nops because we needed one cycle delay to get the result through memory, and another cycle to write the result on the negedge. 
 
-Initially, there was confusion about number of nops and I missed out a few of them but on going through it again, these were all fixed.
+Initially, there was confusion about number of nops and I missed out a few of them due to carelessness but on going through it again, these were all fixed.
 
 ### Changing the ALU
 
@@ -96,7 +111,7 @@ Another Issue we encountered was that initially we had PCSRC logic in the write 
 ```verilog
  assign PCSrcE = (BranchE & (funct3MSBE ^ (funct3LSBE ^ ZeroE))) || JumpE;
 ```
-Kishok talks more about this in his readme.
+Kishok talks more about this in his personal statement.
 
 ## Reflection
 
