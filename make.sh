@@ -1,9 +1,10 @@
 #!/bin/bash
+# brew install gawk
 
 # Arguments
-Dir="$1"
-Instr="$2"
-Mem="$3"
+Dir=$1
+Instr=$2
+Mem=$3
 
 # Error Check
 Pass=0
@@ -45,23 +46,23 @@ if [ "$Pass" == "3" ]; then
     rm test/Assembly/$Instr.asm
 
     # Replace mem and instruction files
-    sed -i "s/\$r.*/\$readmemh(\"\.\/test\/Memory\/$Mem\.mem\", RAM, 32'h10000);/" rtl/$Dir/DataMemory.sv
-    sed -i "s/\$r.*/\$readmemh(\"\.\/test\/Memory\/$Instr\.hex\", ROM);/" rtl/$Dir/InstrMemory.sv
+    sed -i '' "s/\$r.*/\$readmemh(\"\.\/test\/Memory\/$Mem\.mem\", RAM, 32'h10000);/" rtl/$Dir/DataMemory.sv
+    sed -i '' "s/\$r.*/\$readmemh(\"\.\/test\/Memory\/$Instr\.hex\", ROM);/" rtl/$Dir/InstrMemory.sv
 
     # Format testbench
     if [[ "$Instr" == "PDF"* ]]; then
-        sed -i "s/START F1 \*\//START F1 \/\//" cpu_tb.cpp
-        sed -i "s/START PDF \/\//START PDF \*\//" cpu_tb.cpp
+        sed -i '' "s/START F1 \*\//START F1 \/\//" cpu_tb.cpp
+        sed -i '' "s/START PDF \/\//START PDF \*\//" cpu_tb.cpp
     elif [[ "$Instr" == "F1"* ]]; then
-        sed -i "s/START F1 \/\//START F1 \*\//" cpu_tb.cpp
-        sed -i "s/START PDF \*\//START PDF \/\//" cpu_tb.cpp
+        sed -i '' "s/START F1 \/\//START F1 \*\//" cpu_tb.cpp
+        sed -i '' "s/START PDF \*\//START PDF \/\//" cpu_tb.cpp
     else
-        sed -i "s/START F1 \*\//START F1 \/\//" cpu_tb.cpp
-        sed -i "s/START PDF \*\//START PDF \/\//" cpu_tb.cpp
+        sed -i '' "s/START F1 \*\//START F1 \/\//" cpu_tb.cpp
+        sed -i ''"s/START PDF \*\//START PDF \/\//" cpu_tb.cpp
     fi
 
     echo "Make Complete"
 else
     echo "ERROR: Make Failed"
-    echo "$Pass"
+    echo "$Pass" 
 fi
