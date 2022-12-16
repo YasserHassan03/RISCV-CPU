@@ -8,66 +8,66 @@ Who was in charge of what is listed below:
 ### Kishok: 
 I was mainly in charge of the top level modules and testing, these included the following files: 
 
--ALUtop.sv 
+* ALUtop.sv 
 
--ControlUnit.sv 
+* ControlUnit.sv 
 
--Memorytop.sv 
+* Memorytop.sv 
 
--cpu.sv 
+* cpu.sv 
 
--cpu_tb.cpp
+* cpu_tb.cpp
 
--MemWriteff
+* MemWriteff
 
 ### James: 
 I was mainly in charge of PC and memory including the following: 
 
--LoadMemory.sv 
+* LoadMemory.sv 
 
--StoreMemory.sv 
+* StoreMemory.sv 
 
--PCReg.sv 
+* PCReg.sv 
 
--PCTop.sv 
+* PCTop.sv 
 
--InstrMemory.mem 
+* InstrMemory.mem 
 
--IsntrMemory.sv
+* IsntrMemory.sv
 
--DecExeff
+* DecExeff
 
-- F1PL.s
+* F1PL.s
 
 ### Yasser: 
 As well as being the main editor on the readme files, I was mainly in charge of the Alu and the readme including: 
  
- -ALU.sv 
+ * ALU.sv 
  
- -RegisterFile.sv 
+ * RegisterFile.sv 
  
- -DataMemory.mem 
+ * DataMemory.mem 
  
- -DataMemory.sv 
+ * DataMemory.sv 
  
- -DecExeff 
+ * DecExeff 
  
- - PDFPL.s
+ * PDFPL.s
  
 
 ### Ahmad: 
 I was mainly in charge of the control and sign extend unit as well as the F1 machine code including: 
 
--SignExtend.sv 
+* SignExtend.sv 
 
--ALUDecode.sv 
+* ALUDecode.sv 
 
--MainDecoder.sv 
+* MainDecoder.sv 
 
--F1SC.s
+* F1SC.s
 
--make.sh
+* make.sh
 
--run.sh
+* run.sh
 
-- FetchDecff
+* FetchDecff
