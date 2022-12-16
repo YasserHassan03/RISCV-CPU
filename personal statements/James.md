@@ -253,8 +253,86 @@ One other change for the pipelined version of the PC module was moving the PCTar
 # F1 Program pipelining
 
 Initially we had the idea of storing random values in the RAM and then using the time taken to press the trigger to choose a value for the F1 lights delay for the best "Randomness" however after discussing this in more detail we decided that this was not very practical and instead agreed on using the primitive polynomial method used in lab 3. 
-Ahmad (https://github.com/ahumayde) wrote the F1 lights assembly program and explains how it woks in more detail in his personal statement. I adapted the program and made it suitable for our pipelined CPU design by identifying data/control hazards and inserting *NOP* instructions to delay the operation until the data had been written to register file or control signal had reached the [relevant stage](ec3e00c44f53d1de0ac4a8dcc1d416debbf79514)
+[Ahmad](https://github.com/ahumayde) wrote the F1 lights assembly program and explains how it woks in more detail in his personal statement. I adapted the program and made it suitable for our pipelined CPU design by identifying data/control hazards and inserting *NOP* instructions to delay the operation until the data had been written to register file or control signal had reached the [relevant stage](ec3e00c44f53d1de0ac4a8dcc1d416debbf79514).
 
+```Assembly
+default:
+    addi s1, zero, 0x1  
+    addi s2, zero, 0xff 
+    addi s3, zero, 0x3  /* MAY MAKE BIGGER */
+    addi a3, zero, 0x1 
+
+reset:
+    addi a0, zero, 0x0  /* reset output */
+    addi a4, zero, 0x0  /* reset delay counter */
+    addi t0, zero, 0x0  /* reset trigger */
+    nop
+    nop
+
+mloop:
+    beq  t0, s1, fsm    /* check trigger */ 
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+    srli a2, a3, 0x3    /* send 4th bit to 1st bit */
+    nop                 /* one cycle delay to get result through memory section*/
+    nop                 /* one cycle delay to write result on negative edge*/
+    xor  a2, a2, a3     /* xor 4th bit and 1st bit */
+    nop                 /* one cycle delay to get result through memory*/
+    nop                 /* one cycle delay to write result on negative edge*/
+    andi a2, a2, 0x1    /* remove other bits */
+    slli a3, a3, 0x1    /* shift number left by 1 */
+    nop                 /* one cycle delay to get result through memory*/
+    nop                 /* one cycle delay to write result on negative edge*/
+    add  a3, a3, a2     /* add xor and shifted bits */
+    nop                 /* one cycle delay to get result through memory*/
+    nop                 /* one cycle delay to write result on negative edge*/
+    andi a3, a3, 0xf    /* remove additional bits */
+    jal  ra, mloop      /* Loop  */
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+
+fsm:
+    jal  ra, count      /* add const delay */
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+    slli t1, a0, 0x1    /* shift temp output bits left by 1 */
+    nop                 /* one cycle delay to get result through memory*/
+    nop                 /* one cycle delay to write result on negative edge*/
+    addi a0, t1, 0x1    /* add 1 to shifted bits for output */
+    nop                 /* one cycle delay to get result through memory*/
+    nop                 /*one cycle delay to write result on negative edge*/
+    bne  a0, s2, fsm    /* if not all lights are on Loop */
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+delay:
+    beq  a4, a3, reset  /* if delay counter is finished reset */
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+    jal  ra, count      /* jump to counter MAY NOT NEED THIS */
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+    addi a4, a4, 0x1    /* increment delay counter */
+    jal  ra, delay      /* Loop */
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+
+count: 
+    addi  a1, a1, 0x1   /* counter++ */
+    nop                 /* one cycle delay to get result through memory*/
+    nop                 /* one cycle delay to write result on negative edge*/
+    bne   a1, s3, count /* Loop if counting */
+    nop                 /* one cycle delay to get result through memory*/
+    nop                 /* one cycle delay to write result on negative edge*/
+    addi  a1, zero, 0x0 /* reset counter */
+    jalr  ra, ra, 0x0   /* return to fsm */
+    nop                 /* two cycles delay to let jump get to PCsrc logic*/ 
+    nop
+```
+*one thing we noticed was that often we needed two nop instructions due to the two registers between the fetch and execute stages of pipelined cpu*
+
+# Reflection
+
+Overall, I learned alot about System Verilog, Assembly code and RISC-V architecture during this project. One thing that I would do differently if we were to repeat would be to try and do more testing of my individual modules before putting all of the modules together and then testing as an overall team. I think this would have made it easier and faster to debug in the end. Also, if we had more time it would be nice to have a go at implementing cache or possibly using some sort of hardware (hazard unit) to implement delays without manually having to go through and add delays in software. 
 
 
 
